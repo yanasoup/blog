@@ -5,6 +5,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useCreatePost } from '@/hooks/useCreatePost';
 import type { CreatePostParams, UseCreatePostParams } from '@/models/post';
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
 const pageSize = import.meta.env.VITE_BLOG_PAGE_SIZE;
 import {
   Form,
@@ -25,7 +27,7 @@ const MAX_FILE_SIZE = 1024 * 1024 * 5;
 const ACCEPTED_IMAGE_MIME_TYPES = ['image/jpeg', 'image/jpg', 'image/png'];
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { HtmlEditor } from '../editor/html-editor';
+// import { HtmlEditor } from '../editor/html-editor';
 import { toast } from 'sonner';
 
 const formSchema = z.object({
@@ -34,9 +36,14 @@ const formSchema = z.object({
       required_error: 'Please enter a title',
     })
     .max(255),
-  content: z.string({
-    required_error: 'Please enter your content',
-  }),
+  content: z
+    .string({
+      required_error: 'Please enter your content',
+    })
+    .min(10, 'Konten minimal 10 karakter')
+    .refine((val) => val.replace(/<[^>]*>/g, '').trim().length > 0, {
+      message: 'Please enter your content',
+    }),
   image: z
     .any()
     .refine((files) => {
@@ -110,8 +117,10 @@ const BlogPostCreate = () => {
       });
   }
 
-  const onSubmit = () => {
+  const onSubmit = (data: FormData) => {
+    console.log('data', data);
     const formData = form.getValues();
+    console.log('formData', formData);
     // const newTags = formData.tags.split(',').forEach((item) => item.trim());
 
     const newPost = {
@@ -119,13 +128,13 @@ const BlogPostCreate = () => {
       image: selectedImage,
       tags: formData.tags.split(','),
     };
+    console.log('newPost', newPost);
     const createParams: CreatePostParams = {
       data: newPost,
       requestToken: uiuxState.apiToken!,
     };
-    // setSukses(true);
     createPost(createParams);
-    form.reset();
+    // form.reset();
   };
 
   return (
@@ -158,10 +167,16 @@ const BlogPostCreate = () => {
             <FormField
               control={form.control}
               name='content'
-              render={({}) => (
+              render={({ field }) => (
                 <FormItem className='mt-5 gap-1'>
                   <FormLabel>Content</FormLabel>
-                  <HtmlEditor />
+                  {/* <HtmlEditor /> */}
+                  <ReactQuill
+                    theme='snow'
+                    value={field.value}
+                    onChange={field.onChange}
+                    className='mb-12 h-[200px]'
+                  />
                   <FormMessage />
                 </FormItem>
               )}
