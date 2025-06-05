@@ -239,7 +239,7 @@ const PostCardLite: React.FC<PostCardProps> = ({ ...post }) => {
       <div className='flex flex-wrap gap-6'>
         <div className='flex-1 basis-80'>
           <h3 className='text-md-bold md:text-xl-bold text-neutral-900'>
-            {post.title}
+            <NavLink to={`/post/${post.id}`}>{post.title}</NavLink>
           </h3>
           <div className='text-xs-regular md:text-sm-regular mt-3 line-clamp-2 text-neutral-900'>
             {post.content}
@@ -274,12 +274,12 @@ const PostCardLite: React.FC<PostCardProps> = ({ ...post }) => {
   );
 };
 
-type BlogPostType = 'recommended' | 'most-liked';
+export type BlogPostType = 'recommended' | 'most-liked' | 'my-posts';
 type BlogPagerProps = Omit<GetPostsResponse, 'data'> & {
   onPageChange: (page: number, type: BlogPostType) => void;
-  type: BlogPostType;
+  type?: BlogPostType;
 };
-const BlogPager: React.FC<BlogPagerProps> = ({
+export const BlogPager: React.FC<BlogPagerProps> = ({
   total = 0,
   page = 0,
   lastPage = 0,
@@ -290,7 +290,7 @@ const BlogPager: React.FC<BlogPagerProps> = ({
   const goToPage = (page: number) => {
     const clamped = Math.max(1, Math.min(lastPage, page));
     setCurrentPage(clamped);
-    onPageChange(clamped, type);
+    onPageChange(clamped, type || 'recommended');
   };
   const renderPageNumbers = () => {
     const pageButtons = [];

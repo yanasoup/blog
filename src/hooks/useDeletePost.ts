@@ -2,40 +2,37 @@ import { customAxios } from '@/lib/customAxios';
 import type { MutationFunction } from '@tanstack/query-core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-export const sendComment: MutationFunction<
-  PostCommentParams,
-  PostCommentParams
-> = async (postComment: PostCommentParams) => {
-  const response = await customAxios.post<PostCommentParams>(
-    `/comments/${postComment.postId}`,
-    postComment.data,
+export const deletePost: MutationFunction<
+  DeletePostParams,
+  DeletePostParams
+> = async (postParams: DeletePostParams) => {
+  // await wait(5000);
+  const response = await customAxios.delete<DeletePostParams>(
+    `/posts/${postParams.postId}`,
     {
+      data: {},
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
-        Authorization: `Bearer ${postComment.authToken}`,
+        Authorization: `Bearer ${postParams.authToken}`,
       },
     }
   );
   return response.data;
 };
 
-export type UseSendCommentParams = {
+export type UseDeleteParams = {
   queryKey: [string, string | number];
 };
-export type PostCommentParams = {
+export type DeletePostParams = {
   postId: string | number;
   authToken: string;
-  data: {
-    userId: number;
-    content: string;
-  };
 };
-export const useSendComment = (invalidateQueryParams: UseSendCommentParams) => {
+export const useDeletePost = (invalidateQueryParams: UseDeleteParams) => {
   const queryClient = useQueryClient();
 
   const mutationResult = useMutation({
-    mutationFn: sendComment,
+    mutationFn: deletePost,
     onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: invalidateQueryParams.queryKey,

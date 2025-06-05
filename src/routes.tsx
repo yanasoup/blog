@@ -5,6 +5,7 @@ import Register from './pages/register';
 import { MainLayout } from './layouts/mainLayout';
 import BlogPostCreate from './components/blogposts/blog-post-create';
 import PostDetailPage from './pages/post-detail-page';
+import MyProfilelPage from './pages/myprofile-page';
 
 export const router = createBrowserRouter([
   {
@@ -28,7 +29,7 @@ export const router = createBrowserRouter([
     element: <BlogPostCreate />,
   },
   {
-    path: '/write-post',
-    element: <BlogPostCreate />,
+    path: '/myprofile',
+    element: <MyProfilelPage />,
   },
 ]);

@@ -24,14 +24,12 @@ import { FormatQuote } from '@/components/editor/plugins/toolbar/block-format/fo
 import { ToolbarPlugin } from '@/components/editor/plugins/toolbar/toolbar-plugin';
 import { editorTheme } from '@/components/editor/themes/editor-theme';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { ClearFormattingToolbarPlugin } from './plugins/toolbar/clear-formatting-toolbar-plugin';
 import { ElementFormatToolbarPlugin } from './plugins/toolbar/element-format-toolbar-plugin';
 import { FontColorToolbarPlugin } from './plugins/toolbar/font-color-toolbar-plugin';
 import { FontBackgroundToolbarPlugin } from './plugins/toolbar/font-background-toolbar-plugin';
 import { FontFormatToolbarPlugin } from './plugins/toolbar/font-format-toolbar-plugin';
 import { Separator } from '@radix-ui/react-menu';
 import { LinkToolbarPlugin } from './plugins/toolbar/link-toolbar-plugin';
-import { ImagesPlugin } from './plugins/images-plugin';
 
 const editorConfig: InitialConfigType = {
   namespace: 'Editor',
@@ -68,8 +66,7 @@ export function HtmlEditor() {
 const placeholder = 'Start typing...';
 
 export function Plugins() {
-  const [floatingAnchorElem, setFloatingAnchorElem] =
-    useState<HTMLDivElement | null>(null);
+  const [_, setFloatingAnchorElem] = useState<HTMLDivElement | null>(null);
 
   const onRef = (_floatingAnchorElem: HTMLDivElement) => {
     if (_floatingAnchorElem !== null) {
@@ -81,7 +78,7 @@ export function Plugins() {
     <div className='relative'>
       {/* toolbar plugins */}
       <ToolbarPlugin>
-        {({ blockType }) => (
+        {({}) => (
           <div className='vertical-align-middle sticky top-0 z-10 flex gap-2 overflow-auto border-b p-1'>
             <BlockFormatDropDown>
               <FormatParagraph />

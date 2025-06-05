@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { Button } from '../ui/button';
 import {
   Dialog,
   DialogBody,
@@ -19,7 +18,6 @@ interface FormStatusDialogProps extends React.ComponentProps<typeof Dialog> {
   postId: string | undefined;
 }
 import { useGetComments } from '@/hooks/useGetPost';
-import { Icon } from 'lucide-react';
 
 const PostCommentsDialog: React.FC<FormStatusDialogProps> = ({
   title,
@@ -43,9 +41,9 @@ const PostCommentsDialog: React.FC<FormStatusDialogProps> = ({
           }}
         >
           <DialogTitle className='flex items-center justify-between'>
-            <h3 className='text-xl-bold lg:display-xs-bold text-left text-neutral-900'>
+            <p className='text-md-bold lg:text-xl-bold text-left text-neutral-900'>
               Comments ({getCommentsResult.data?.length || 0})
-            </h3>
+            </p>
             <DialogClose asChild>
               <XIcon size={24} className='cursor-pointer' />
             </DialogClose>

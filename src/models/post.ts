@@ -84,3 +84,10 @@ export type SendCommentResponse = {
   post: number;
   createdAt: string;
 };
+
+export type BlogUser = {
+  id: number;
+  name: string;
+  headline: string;
+  avatarUrl: string;
+};

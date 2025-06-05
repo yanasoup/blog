@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { boolean } from 'zod';
 
 export type AuthUser = {
   id: number;
@@ -56,7 +55,7 @@ const UIUXSlice = createSlice({
       }
     },
 
-    resetState: (state) => {
+    resetState: () => {
       return initialState;
     },
   },

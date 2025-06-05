@@ -25,7 +25,7 @@ export const createPost: MutationFunction<
 export const useCreatePost = (invalidateQueryParams: UseCreatePostParams) => {
   const queryClient = useQueryClient();
 
-  const addTodoMutation = useMutation({
+  const mutationResult = useMutation({
     mutationFn: (newPost: CreatePostParams) => createPost(newPost),
     onSettled: () => {
       queryClient.invalidateQueries({
@@ -34,5 +34,5 @@ export const useCreatePost = (invalidateQueryParams: UseCreatePostParams) => {
     },
   });
 
-  return addTodoMutation;
+  return mutationResult;
 };

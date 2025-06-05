@@ -158,7 +158,7 @@ const BlogPostCreate = () => {
             <FormField
               control={form.control}
               name='content'
-              render={({ field }) => (
+              render={({}) => (
                 <FormItem className='mt-5 gap-1'>
                   <FormLabel>Content</FormLabel>
                   <HtmlEditor />

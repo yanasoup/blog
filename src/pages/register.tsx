@@ -43,8 +43,6 @@ const formSchema = z
 
 type RegisterFormData = z.infer<typeof formSchema>;
 const Register = () => {
-  const [password, setPassword] = useState('');
-  const [passwordConfirm, setPasswordConfirm] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
@@ -66,13 +64,13 @@ const Register = () => {
     else setShowPasswordConfirm(!showPasswordConfirm);
   };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.name === 'password') {
-      setPassword(event.target.value);
-    } else {
-      setPasswordConfirm(event.target.value);
-    }
-  };
+  // const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (event.target.name === 'password') {
+  //     setPassword(event.target.value);
+  //   } else {
+  //     setPasswordConfirm(event.target.value);
+  //   }
+  // };
 
   const onSubmit = async (data: RegisterFormData) => {
     // console.log('data', data);

@@ -20,38 +20,9 @@ import PostComments from '@/components/blogposts/post-comments';
 import PostCommentsDialog from '@/components/blogposts/post-comments-dialog';
 import { NavLink } from 'react-router';
 import CommentLoggedUser from '@/components/partials/comment-logged-user';
-// import { zodResolver } from '@hookform/resolvers/zod';
-// import { useForm } from 'react-hook-form';
-
-// import { z } from 'zod';
-// import { Textarea } from '@/components/ui/textarea';
-
-// import {
-//   Form,
-//   FormField,
-//   FormItem,
-//   FormLabel,
-//   FormMessage,
-// } from '@/components/ui/form';
-
-// const formSchema = z.object({
-//   comment: z.string({
-//     invalid_type_error: 'Please enter a valid email',
-//   }),
-// });
-// type FormData = z.infer<typeof formSchema>;
 
 export const PostDetailPage: React.FC = () => {
   const [showAllComments, setShowAllComments] = React.useState(false);
-  // const form = useForm<FormData>({
-  //   resolver: zodResolver(formSchema),
-  //   defaultValues: {
-  //     comment: '',
-  //   },
-  // });
-  // const onSubmit = async (data: FormData) => {
-  //   console.log(data);
-  // };
 
   const uiuxState = useSelector((state: RootState) => state.uiux);
   const dispatch = useDispatch();

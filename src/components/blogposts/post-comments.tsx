@@ -21,8 +21,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { NavLink } from 'react-router';
-import PostCommentsDialog from './post-comments-dialog';
 
 const formSchema = z.object({
   comment: z
@@ -45,7 +43,6 @@ const PostComments: React.FC<PostCommentsProps> = ({ params, postId }) => {
   };
 
   const {
-    error,
     isPending: isPostComentLoading,
     isSuccess: isPostComentSuccess,
     mutate: sendComment,
@@ -130,7 +127,10 @@ const PostComments: React.FC<PostCommentsProps> = ({ params, postId }) => {
       {params.data && (
         <>
           {params.data.map((comment) => (
-            <div className='mt-4 flex flex-col gap-2 border-t border-neutral-300 pt-4'>
+            <div
+              key={comment.id}
+              className='mt-4 flex flex-col gap-2 border-t border-neutral-300 pt-4'
+            >
               <div className='flex items-center justify-start gap-2'>
                 <img
                   className='size-10 rounded-full object-contain'

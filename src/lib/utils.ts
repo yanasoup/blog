@@ -7,12 +7,6 @@ export function cn(...inputs: ClassValue[]) {
 
 export const formatDate = (isoString: string) => {
   const date = new Date(isoString);
-  // const options: Intl.DateTimeFormatOptions = {
-  //   day: 'numeric',
-  //   month: 'long',
-  //   year: 'numeric',
-  // };
-  // return date.toLocaleDateString('en-US', options); // 'en-US' untuk format bulan bahasa Inggris
 
   const day = date.getUTCDate();
   const month = date.toLocaleString('default', {
@@ -21,4 +15,19 @@ export const formatDate = (isoString: string) => {
   });
   const year = date.getUTCFullYear();
   return `${day} ${month} ${year}`;
+};
+
+export const formatDateTime = (isoString: string) => {
+  const date = new Date(isoString);
+
+  const options = {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  } as const;
+
+  return date.toLocaleString('en-GB', options).replace(',', '');
 };

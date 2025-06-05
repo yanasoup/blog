@@ -13,7 +13,6 @@ import { useDispatch } from 'react-redux';
 import { setUnauthenticated, resetState } from '@/redux/ui-slice';
 import { Icon } from '@iconify-icon/react';
 import { useMedia } from 'react-use';
-import { toast } from 'sonner';
 
 const UserProfileButton = () => {
   const uiuxState = useSelector((state: RootState) => state.uiux);
@@ -31,18 +30,6 @@ const UserProfileButton = () => {
       navigate('/login');
     }
   }, [uiuxState.isLoggedOut]);
-
-  // React.useEffect(() => {
-  //   if (uiuxState.isAuthenticated) {
-  //     toast('Login Success', {
-  //       description: `you are logged in as: ${uiuxState.authUser?.name} ${uiuxState.authUser?.email}`,
-  //       action: {
-  //         label: 'Ok',
-  //         onClick: () => {},
-  //       },
-  //     });
-  //   }
-  // }, [uiuxState.isAuthenticated]);
 
   return (
     <>
@@ -93,7 +80,7 @@ export const UserDropdownMenu: React.FC<UserDropdownMenuProps> = ({
       <DropdownMenuContent className='w-56' align='start'>
         <DropdownMenuItem
           className='item-center text-sm-regular flex cursor-pointer justify-start'
-          onClick={() => navigate('/profile')}
+          onClick={() => navigate('/myprofile')}
         >
           <Icon icon='ci:user-03' className='flex-center' />
           Profile

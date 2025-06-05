@@ -1,5 +1,5 @@
 import { customAxios } from '@/lib/customAxios';
-import type { Post, UpdatePostParams } from '@/models/post';
+import type { Post } from '@/models/post';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 async function updatePostLike(id: number): Promise<Post> {
@@ -16,8 +16,3 @@ export const useUpdatePostLike = () => {
   });
   return updatePostLikeMutation;
 };
-
-async function updatePost({ id, newData }: UpdatePostParams): Promise<Post> {
-  const response = await customAxios.patch(`/posts/${id}`, newData);
-  return response.data;
-}
