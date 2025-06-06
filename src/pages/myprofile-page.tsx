@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Navigation from '@/components/partials/navigation';
 import DebugBox from '@/redux/debug-box';
 
@@ -22,6 +22,7 @@ import { DeletePostParams, useDeletePost } from '@/hooks/useDeletePost';
 import PostStatisticDialog from '@/components/partials/dialogs/post-statistics-dialog';
 import { useSelector } from 'react-redux';
 import UserBadgeOccupation from '@/components/partials/user-badge-occupation';
+import { toast } from 'sonner';
 export const MyProfilelPage: React.FC = () => {
   const [showStatsDialog, setShowStatsDialog] = React.useState(false);
   const uiuxState = useSelector((state: RootState) => state.uiux);
@@ -31,7 +32,12 @@ export const MyProfilelPage: React.FC = () => {
     null
   );
 
-  const { isPending: isDeleting, mutate: deletePostFn } = useDeletePost({
+  const {
+    error: deleteError,
+    isSuccess,
+    isPending: isDeleting,
+    mutate: deletePostFn,
+  } = useDeletePost({
     queryKey: ['my-posts', currentPage],
   });
 
@@ -67,6 +73,20 @@ export const MyProfilelPage: React.FC = () => {
     setShowStatsDialog(true);
     setSelectedPostId(postId);
   };
+
+  useEffect(() => {
+    console.log('useEffect');
+    {
+      deleteError &&
+        toast('Delete Failed', {
+          description: `failed to delete: ${deleteError}`,
+          action: {
+            label: 'Ok',
+            onClick: () => console.log('Ok'),
+          },
+        });
+    }
+  }, [deleteError]);
 
   return (
     <div>

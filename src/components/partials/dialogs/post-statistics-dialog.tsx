@@ -19,7 +19,8 @@ import {
   useGetLikes,
 } from '@/hooks/useGetPost';
 import UserBadgeOccupation from '@/components/partials/user-badge-occupation';
-import { Comment } from '@/models/post';
+import { BlogUser, Comment } from '@/models/post';
+// import { getRandomIntInclusive } from '@/lib/utils';
 
 interface DialogProps extends React.ComponentProps<typeof Dialog> {
   title: string;
@@ -38,8 +39,12 @@ const PostStatisticDialog: React.FC<DialogProps> = ({
     postId: postId,
   };
 
-  console.log('paramsLikes', paramsLikes);
-  const { isFetching: isFetchingLikes } = useGetLikes(paramsLikes);
+  // const totalLikes = getRandomIntInclusive(0, 100);
+  const {
+    data: likes,
+    isFetching: isFetchingLikes,
+    totalData: totalLikes,
+  } = useGetLikes(paramsLikes);
 
   const paramsComments: UseGetPostParams = {
     qkey: 'post-comments',
@@ -94,9 +99,9 @@ const PostStatisticDialog: React.FC<DialogProps> = ({
                 </TabsList>
                 <TabsContent
                   value='like'
-                  className='max-h-[50vh] overflow-y-auto py-5'
+                  className='max-h-[50vh] overflow-y-auto'
                 >
-                  <div className='flex flex-col items-start justify-between gap-4 border-b border-neutral-300 pb-5'>
+                  <div className='flex flex-col items-start justify-between gap-5 pt-3'>
                     {isFetchingLikes && (
                       <div className='flex-center mt-6 flex flex-col'>
                         <p className='text-xs-regular text-neutral-500'>
@@ -109,30 +114,49 @@ const PostStatisticDialog: React.FC<DialogProps> = ({
                         />
                       </div>
                     )}
-                    {new Array(8).fill(null).map((_, index) => (
-                      <UserBadgeOccupation
-                        key={index}
-                        name={`Dummy-User-${index + 1}`}
-                        avatarUrl='https://placehold.co/50'
-                        occupation='Frontend Developer'
-                      />
+                    <div className='text-sm-bold lg:text-lg-bold text-neutral-950'>
+                      Like ({totalLikes === 0 ? 0 : totalLikes})
+                    </div>
+
+                    {likes?.map((user: BlogUser) => (
+                      <div className='w-full border-b border-neutral-300 pb-3'>
+                        <UserBadgeOccupation
+                          key={user.id}
+                          name={user.name}
+                          avatarUrl={
+                            user.avatarUrl
+                              ? user.avatarUrl
+                              : 'https://placehold.co/50'
+                          }
+                          occupation={
+                            user.headline ? user.headline : 'Frontend Developer'
+                          }
+                          avatarUrlClassName='size-12'
+                          nameClassName='text-xs-semibold lg:text-sm-semibold text-neutral-900'
+                          occupationClassName='text-xs-regular lg:text-sm-regular text-neutral-600'
+                        />
+                      </div>
                     ))}
-                    {/* {likes?.map((user: BlogUser) => (
-                      <UserBadgeOccupation
-                        key={user.id}
-                        name={user.name}
-                        avatarUrl={
-                          user.avatarUrl
-                            ? user.avatarUrl
-                            : 'https://placehold.co/50'
-                        }
-                        occupation='Frontend Developer'
-                      />
+                    {/* {new Array(totalLikes).fill(null).map((_, index) => (
+                      <div className='w-full border-b border-neutral-300 pb-3'>
+                        <UserBadgeOccupation
+                          key={index}
+                          name={`Dummy-User-${index + 1}`}
+                          avatarUrl='https://placehold.co/50'
+                          occupation='Frontend Developer'
+                          avatarUrlClassName='size-12'
+                          nameClassName='text-xs-semibold lg:text-sm-semibold text-neutral-900'
+                          occupationClassName='text-xs-regular lg:text-sm-regular text-neutral-600'
+                        />
+                      </div>
                     ))} */}
                   </div>
                 </TabsContent>
-                <TabsContent value='comment' className='py-5'>
-                  <div className='flex flex-col justify-between pb-5'>
+                <TabsContent
+                  value='comment'
+                  className='max-h-[50vh] overflow-y-auto'
+                >
+                  <div className='flex flex-col items-start justify-between gap-5 overflow-y-auto pt-3'>
                     {isFetchingComments && (
                       <div className='flex-center mt-6 flex flex-col'>
                         <p className='text-xs-regular text-neutral-500'>
@@ -145,15 +169,13 @@ const PostStatisticDialog: React.FC<DialogProps> = ({
                         />
                       </div>
                     )}
-                    {totalComments === 0 && (
-                      <div className='flex flex-col justify-between pb-5'>
-                        no comments found
-                      </div>
-                    )}
+                    <div className='text-sm-bold lg:text-lg-bold text-neutral-950'>
+                      Comment ({totalComments === 0 ? 0 : totalComments})
+                    </div>
                     {comments?.map((comment: Comment) => (
                       <div
                         key={comment.id}
-                        className='mt-3 flex flex-col gap-2 border-b border-neutral-300 pb-3 last:border-b-0'
+                        className='w-full border-b border-neutral-300 pb-3'
                       >
                         <div className='flex items-center gap-2'>
                           <img

@@ -14,4 +14,3 @@ export const useGetUser = (email: string) => {
     enabled: !!email,
   });
 };
-

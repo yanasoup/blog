@@ -39,6 +39,7 @@ export const useGetComments = ({
   const { data, isLoading, isFetching, error } = useQuery({
     queryKey: [qkey, postId],
     queryFn: getComments,
+    enabled: postId !== 0,
   });
 
   const respData = data ?? undefined;

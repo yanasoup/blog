@@ -173,7 +173,7 @@ const PostCard: React.FC<PostCardProps> = ({ ...post }) => {
             ))}
           </div>
           <div className='text-xs-regular md:text-sm-regular mt-3 line-clamp-2 text-neutral-900'>
-            {post.content}
+            <span dangerouslySetInnerHTML={{ __html: post.content }} />
           </div>
           <div className='mt-3 flex items-center gap-3'>
             <div className='flex-center flex gap-2'>
@@ -242,7 +242,7 @@ const PostCardLite: React.FC<PostCardProps> = ({ ...post }) => {
             <NavLink to={`/post/${post.id}`}>{post.title}</NavLink>
           </h3>
           <div className='text-xs-regular md:text-sm-regular mt-3 line-clamp-2 text-neutral-900'>
-            {post.content}
+            <span dangerouslySetInnerHTML={{ __html: post.content }} />
           </div>
           <div className='mt-3 flex items-center gap-4'>
             <div className='like-count flex-center gap-1.5'>
