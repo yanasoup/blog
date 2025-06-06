@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import {
@@ -20,25 +20,30 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setAuthenticated } from '@/redux/ui-slice';
 import type { RootState } from '@/redux/store';
 import { useNavigate } from 'react-router';
+import { useBlogLogin } from '@/hooks/useAuth';
+import { AxiosError } from 'axios';
 
 const formSchema = z.object({
   email: z
     .string({
       invalid_type_error: 'Please enter a valid email',
     })
-    .email('Please enter your email'),
+    .min(1, 'Please enter your email')
+    .email('Please enter a valid email'),
   password: z
     .string({
       required_error: 'Please enter your password',
     })
-    .max(255),
+    .min(1, 'Please enter your password')
+    .max(255, 'invalid password'),
 });
 
 type LoginFormData = z.infer<typeof formSchema>;
 const Login = () => {
   const navigate = useNavigate();
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = React.useRef<HTMLInputElement>(null);
 
-  const [loading, setLoading] = React.useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const uiuxState = useSelector((state: RootState) => state.uiux);
@@ -51,47 +56,55 @@ const Login = () => {
     },
   });
 
+  const {
+    data: loginResponse,
+    mutate: loginFn,
+    isSuccess,
+    error,
+    isPending,
+  } = useBlogLogin();
   const onSubmit = async (data: LoginFormData) => {
-    setLoading(true);
-    await customAxios
-      .post('/auth/login', data, {
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: '*/*',
-        },
-      })
-      .then(async function (response) {
-        const authUser = await getUsersHandler(data.email);
-        dispatch(
-          setAuthenticated({
-            authUser: authUser,
-            apiToken: response.data.token,
-          })
-        );
-        navigate('/');
-      })
-      .catch(function (error) {
-        toast('Login Failed', {
-          description: `failed to login: ${error}`,
-          action: {
-            label: 'Ok',
-            onClick: () => console.log('Ok'),
-          },
-        });
-      })
-      .finally(function () {
-        setLoading(false);
-      });
+    // console.log('form data', data);
+    loginFn(data);
   };
-
   const getUsersHandler = async (email: string) => {
     const response = await customAxios.get(`/users/${email}`);
     return response.data;
   };
-  const emailRef = useRef<HTMLInputElement>(null);
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      async function getUserInfo() {
+        const authUser = await getUsersHandler(emailRef.current?.value || '');
+        dispatch(
+          setAuthenticated({
+            authUser: authUser,
+            apiToken: loginResponse?.token!,
+          })
+        );
+        toast('Login Success', {
+          description: `Welcome back ${authUser.name}`,
+          action: {
+            label: 'Ok',
+            onClick: () => navigate('/'),
+          },
+        });
+        navigate('/');
+      }
+      getUserInfo();
+    } else if (error instanceof AxiosError) {
+      toast('Login Failed!', {
+        description: `Error: ${error?.response?.data?.message}`,
+        action: {
+          label: 'Ok',
+          onClick: () => {},
+        },
+      });
+    }
+  }, [isSuccess, error, navigate, dispatch]);
 
   return (
     <div className='flex h-screen flex-col place-items-center justify-center'>
@@ -116,7 +129,7 @@ const Login = () => {
                     ref={emailRef}
                     className='text-sm-regular'
                     placeholder='Enter your email'
-                    disabled={loading}
+                    disabled={isPending}
                     type='email'
                   />
                   <FormMessage />
@@ -132,9 +145,10 @@ const Login = () => {
                   <div className='relative'>
                     <Input
                       {...field}
+                      ref={passwordRef}
                       className='text-sm-regular'
                       placeholder='Enter your password'
-                      disabled={loading}
+                      disabled={isPending}
                       type={showPassword ? 'text' : 'password'}
                       name='password'
                     />
@@ -163,8 +177,9 @@ const Login = () => {
                 </FormItem>
               )}
             />
-            <Button disabled={loading} type='submit' className='mt-5'>
-              {loading ? (
+
+            <Button disabled={isPending} type='submit' className='mt-5'>
+              {isPending ? (
                 <BeatLoader color='#d5d7da' className='text-white' size={16} />
               ) : (
                 'Login'

@@ -1,6 +1,6 @@
 import { customAxios } from '@/lib/customAxios';
 import type { AuthUser } from '@/redux/ui-slice';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 
 async function getUser(email: string): Promise<AuthUser> {
   const response = await customAxios.get(`/users/${email}`);
@@ -13,4 +13,32 @@ export const useGetUser = (email: string) => {
     queryFn: () => getUser(email),
     enabled: !!email,
   });
+};
+
+type BlogLoginParams = {
+  email: string;
+  password: string;
+};
+type BlogLoginResponse = {
+  token: string;
+};
+
+export const useBlogLogin = () => {
+  return useMutation({
+    mutationFn: (params: BlogLoginParams) => blogLogin(params),
+  });
+};
+
+export const blogLogin = async ({ email, password }: BlogLoginParams) => {
+  const response = await customAxios.post<BlogLoginResponse>(
+    '/auth/login',
+    { email, password },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: '*/*',
+      },
+    }
+  );
+  return response.data;
 };

@@ -23,6 +23,7 @@ import PostStatisticDialog from '@/components/partials/dialogs/post-statistics-d
 import { useSelector } from 'react-redux';
 import UserBadgeOccupation from '@/components/partials/user-badge-occupation';
 import { toast } from 'sonner';
+import { AxiosError } from 'axios';
 export const MyProfilelPage: React.FC = () => {
   const [showStatsDialog, setShowStatsDialog] = React.useState(false);
   const uiuxState = useSelector((state: RootState) => state.uiux);
@@ -34,7 +35,7 @@ export const MyProfilelPage: React.FC = () => {
 
   const {
     error: deleteError,
-    isSuccess,
+    isSuccess: isDeleteSuccess,
     isPending: isDeleting,
     mutate: deletePostFn,
   } = useDeletePost({
@@ -75,11 +76,37 @@ export const MyProfilelPage: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log('useEffect');
+    if (isDeleteSuccess) {
+      setShowDeleteDlg(false);
+    }
+  }, [isDeleteSuccess]);
+
+  React.useEffect(() => {
+    if (isDeleteSuccess) {
+      setShowDeleteDlg(false);
+      toast('Delete Success', {
+        description: `Post successfully deleted`,
+        action: {
+          label: 'Ok',
+          onClick: () => {},
+        },
+      });
+    } else if (deleteError instanceof AxiosError) {
+      toast('Delete Failed!', {
+        description: `${deleteError?.response?.data?.message}`,
+        action: {
+          label: 'Ok',
+          onClick: () => {},
+        },
+      });
+    }
+  }, [isDeleteSuccess]);
+
+  React.useEffect(() => {
     {
       deleteError &&
         toast('Delete Failed', {
-          description: `failed to delete: ${deleteError}`,
+          description: `Error: ${deleteError}`,
           action: {
             label: 'Ok',
             onClick: () => console.log('Ok'),
