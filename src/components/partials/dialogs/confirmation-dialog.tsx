@@ -47,9 +47,10 @@ const MyConfirmationDialog: React.FC<FormStatusDialogProps> = ({
               <XIcon size={24} className='cursor-pointer' />
             </DialogClose>
           </DialogTitle>
-          <DialogDescription className='lg:text-md-regular text-sm-regular py-6 text-left text-neutral-600'>
+          <DialogDescription className='hidden' />
+          <div className='lg:text-md-regular text-sm-regular py-6 text-left text-neutral-600'>
             {description}
-          </DialogDescription>
+          </div>
 
           <DialogDescription className='flex justify-end gap-1'>
             <DialogClose asChild>

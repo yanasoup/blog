@@ -40,7 +40,11 @@ const UserProfileButton = () => {
             <div className='flex-center flex cursor-pointer gap-2 lg:hidden'>
               <img
                 className='size-10 rounded-full object-contain'
-                src='https://placehold.co/40'
+                src={
+                  uiuxState.authUser?.avatarUrl
+                    ? uiuxState.authUser?.avatarUrl
+                    : 'https://placehold.co/40'
+                }
               />
               <span className='text-xs-medium md:text-sm-medium text-neutral-900'>
                 {uiuxState.authUser?.name}

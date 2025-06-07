@@ -6,12 +6,13 @@ export type AuthUser = {
   name: string;
   email: string;
   avatarUrl: string;
+  headline?: string;
 };
 type UIUXState = {
   apiToken: string | null;
   likedPosts: number[];
   isAuthenticated: boolean;
-  authUser: AuthUser | null;
+  authUser: (AuthUser & { headline?: string }) | null;
   isLoggedOut: boolean;
 };
 

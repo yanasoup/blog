@@ -26,11 +26,19 @@ import { toast } from 'sonner';
 import { AxiosError } from 'axios';
 import UpdatePasswordForm from '@/components/forms/update-password-form';
 import { useUpdatePasswordParams, useUpdatePassword } from '@/hooks/useAuth';
+import EditProfileDialog from '@/components/partials/dialogs/edit-profile-dialog';
+import { useUpdateProfile, UpdateProfileParams } from '@/hooks/useAuth';
+import { customAxios } from '@/lib/customAxios';
+import { setAuthUser } from '@/redux/ui-slice';
+import { useDispatch } from 'react-redux';
 
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 export const MyProfilelPage: React.FC = () => {
+  const dispatch = useDispatch();
   const [showStatsDialog, setShowStatsDialog] = React.useState(false);
   const uiuxState = useSelector((state: RootState) => state.uiux);
   const [currentPage, setcurrentPage] = React.useState(1);
+  const [showEditProfileDlg, setShowEditProfileDlg] = React.useState(false);
   const [showDeleteDlg, setShowDeleteDlg] = React.useState(false);
   const [selectedPostId, setSelectedPostId] = React.useState<number | null>(
     null
@@ -91,14 +99,23 @@ export const MyProfilelPage: React.FC = () => {
     updatePassFn(data);
   };
 
+  const {
+    mutate: updateProfileFn,
+    isSuccess: changeProfileSuccess,
+    isPending: changeProfilePending,
+  } = useUpdateProfile();
+  type UpdateUserProfileParams = Omit<UpdateProfileParams, 'authToken'>;
+  const onUpdateProfileFormSubmit = (updateparams: UpdateUserProfileParams) => {
+    const data = { ...updateparams, authToken: uiuxState?.apiToken || '' };
+    updateProfileFn(data);
+  };
+
   React.useEffect(() => {
     if (changePassSuccess) {
       toast.success('Update Success', {
         description: `Your password successfully updated`,
       });
     } else if (changePassError instanceof AxiosError) {
-      console.log('updateparams', changePassError);
-
       toast.error('Update Failed!', {
         description: `${changePassError?.response?.data?.message}`,
       });
@@ -145,6 +162,28 @@ export const MyProfilelPage: React.FC = () => {
     }
   }, [deleteError]);
 
+  React.useEffect(() => {
+    if (changeProfileSuccess) {
+      toast.success('Update profile Success');
+
+      const getUsersHandler = async (email: string) => {
+        const response = await customAxios.get(`/users/${email}`);
+        return response.data;
+      };
+      getUsersHandler(uiuxState.authUser?.email || '').then((authUser) => {
+        dispatch(
+          setAuthUser({
+            id: authUser.id,
+            name: authUser.name,
+            email: authUser.email,
+            avatarUrl: `${apiBaseUrl}${authUser.avatarUrl}`,
+            headline: authUser.headline,
+          })
+        );
+        setShowEditProfileDlg(false);
+      });
+    }
+  }, [changeProfileSuccess]);
   return (
     <div>
       <Navigation />
@@ -158,10 +197,11 @@ export const MyProfilelPage: React.FC = () => {
                 ? uiuxState.authUser?.avatarUrl
                 : 'https://placehold.co/50'
             }
-            occupation='Frontend Developer'
+            occupation={uiuxState.authUser?.headline || 'Frontend Developer'}
           />
           <NavLink
-            to='/myprofile/edit'
+            to='#'
+            onClick={() => setShowEditProfileDlg(true)}
             className='text-primary-300 text-xs-semibold lg:text-sm-semibold underline'
           >
             Edit Profile
@@ -244,6 +284,12 @@ export const MyProfilelPage: React.FC = () => {
           open={showStatsDialog}
           postId={selectedPostId || 0}
           onOpenChange={setShowStatsDialog}
+        />
+        <EditProfileDialog
+          onConfirm={onUpdateProfileFormSubmit}
+          showLoader={changeProfilePending}
+          open={showEditProfileDlg}
+          onOpenChange={setShowEditProfileDlg}
         />
       </div>
     </div>

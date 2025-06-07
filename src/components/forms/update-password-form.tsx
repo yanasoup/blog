@@ -15,26 +15,29 @@ import { Button } from '@/components/ui/button';
 import { BeatLoader } from 'react-spinners';
 
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
-import { useBlogLogin } from '@/hooks/useAuth';
-import { NavLink } from 'react-router';
 
 const formSchema = z
   .object({
-    current_password: z.string().min(1, 'Please enter your password'),
-    new_password: z.string().min(8, 'Password must be at least 8 characters'),
-    new_password_confirm: z
+    currentPassword: z.string().min(1, 'Please enter your password'),
+    newPassword: z.string().min(8, 'Password must be at least 8 characters'),
+    confirmPassword: z
       .string()
       .min(8, 'Confirm Password must be at least 8 characters'),
   })
-  .refine((data) => data.new_password === data.new_password_confirm, {
+  .refine((data) => data.newPassword === data.confirmPassword, {
     message: 'Passwords do not match',
-    path: ['new_password_confirm'],
+    path: ['confirmPassword'],
   });
 
 type FormData = z.infer<typeof formSchema>;
 
+type UpdatePasswordProps = {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+};
 type FormProps = {
-  onSubmit: () => void;
+  onSubmit: (params: UpdatePasswordProps) => void;
   isLoading: boolean;
 };
 const UpdatePasswordForm: React.FC<FormProps> = ({ onSubmit, isLoading }) => {
@@ -45,15 +48,15 @@ const UpdatePasswordForm: React.FC<FormProps> = ({ onSubmit, isLoading }) => {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      current_password: '',
-      new_password: '',
-      new_password_confirm: '',
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: '',
     },
   });
   const togglePasswordVisibility = (
-    caller: 'current_password' | 'new_password' | 'new_password_confirm'
+    caller: 'currentPassword' | 'new_password' | 'new_password_confirm'
   ) => {
-    if (caller === 'current_password') setShowPassword(!showPassword);
+    if (caller === 'currentPassword') setShowPassword(!showPassword);
     else if (caller === 'new_password') setShowNewPassword(!showNewPassword);
     else setShowNewPasswordConfirm(!showNewPasswordConfirm);
   };
@@ -67,7 +70,7 @@ const UpdatePasswordForm: React.FC<FormProps> = ({ onSubmit, isLoading }) => {
         >
           <FormField
             control={form.control}
-            name='current_password'
+            name='currentPassword'
             render={({ field }) => (
               <FormItem className='mt-5 gap-1'>
                 <FormLabel>Current Password</FormLabel>
@@ -87,7 +90,7 @@ const UpdatePasswordForm: React.FC<FormProps> = ({ onSubmit, isLoading }) => {
                       type='button'
                       className='focus:outline-none'
                       onClick={() =>
-                        togglePasswordVisibility('current_password')
+                        togglePasswordVisibility('currentPassword')
                       }
                     >
                       {showPassword ? (
@@ -111,7 +114,7 @@ const UpdatePasswordForm: React.FC<FormProps> = ({ onSubmit, isLoading }) => {
 
           <FormField
             control={form.control}
-            name='new_password'
+            name='newPassword'
             render={({ field }) => (
               <FormItem className='mt-5 gap-1'>
                 <FormLabel>New Password</FormLabel>
@@ -122,9 +125,6 @@ const UpdatePasswordForm: React.FC<FormProps> = ({ onSubmit, isLoading }) => {
                     placeholder='Enter new password'
                     disabled={isLoading}
                     type={showNewPassword ? 'text' : 'password'}
-                    id='password'
-                    // onChange={handleInputChange}
-                    // value={password}
                   />
                   <div className='pointer-events-auto absolute inset-y-0 right-0 flex items-center pr-3'>
                     <button
@@ -152,7 +152,7 @@ const UpdatePasswordForm: React.FC<FormProps> = ({ onSubmit, isLoading }) => {
           />
           <FormField
             control={form.control}
-            name='new_password_confirm'
+            name='confirmPassword'
             render={({ field }) => (
               <FormItem className='mt-5 gap-1'>
                 <FormLabel>Confirm New Password</FormLabel>

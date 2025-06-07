@@ -106,10 +106,8 @@ const BlogPostCreate = () => {
     }
   });
 
-  const onSubmit = (data: FormData) => {
-    console.log('data', data);
+  const onSubmit = () => {
     const formData = form.getValues();
-    console.log('formData', formData);
     // const newTags = formData.tags.split(',').forEach((item) => item.trim());
 
     const newPost = {
@@ -123,7 +121,6 @@ const BlogPostCreate = () => {
       requestToken: uiuxState.apiToken!,
     };
     createPost(createParams);
-    // form.reset();
   };
 
   return (

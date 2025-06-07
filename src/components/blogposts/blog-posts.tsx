@@ -327,7 +327,6 @@ export const BlogPager: React.FC<BlogPagerProps> = ({
         (i === currentPage - 1 && currentPage > 1) ||
         (i === currentPage + 1 && currentPage < total - 3)
       ) {
-        console.log('else ', i);
         pageButtons.push(
           <PaginationItem key={i}>
             <PaginationEllipsis className='lg:text-sm-regular text-xs-regular' />
@@ -351,7 +350,7 @@ export const BlogPager: React.FC<BlogPagerProps> = ({
 
   return (
     <Pagination className='flex-center mt-6 flex-wrap'>
-      <PaginationContent className='basis-80'>
+      <PaginationContent className='flex-center basis-80'>
         {renderPageNumbers()}
       </PaginationContent>
     </Pagination>

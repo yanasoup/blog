@@ -74,3 +74,32 @@ export const updatePassword = async ({
   );
   return response.data;
 };
+
+export type UpdateProfileParams = {
+  name: string;
+  headline: string;
+  avatar: any;
+  authToken: string;
+};
+export const useUpdateProfile = () => {
+  return useMutation({
+    mutationFn: (params: UpdateProfileParams) => updateProfile(params),
+  });
+};
+
+export const updateProfile = async (params: UpdateProfileParams) => {
+  const apiParams = {
+    name: params.name,
+    headline: params.headline,
+    avatar: params.avatar,
+  };
+  const response = await customAxios.patch('/users/profile', apiParams, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      Accept: '*/*',
+      Authorization: `Bearer ${params.authToken}`,
+    },
+  });
+
+  return response.data;
+};

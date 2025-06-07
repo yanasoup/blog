@@ -73,7 +73,8 @@ const PostStatisticDialog: React.FC<DialogProps> = ({
               <XIcon size={24} className='cursor-pointer' />
             </DialogClose>
           </DialogTitle>
-          <DialogDescription className='lg:text-md-regular text-sm-regular py-6 text-left text-neutral-600'>
+          <DialogDescription className='hidden' />
+          <div className='lg:text-md-regular text-sm-regular py-6 text-left text-neutral-600'>
             <div className='mt-5'>
               <Tabs defaultValue='like'>
                 <TabsList className='flex items-center border-b border-neutral-300'>
@@ -119,7 +120,10 @@ const PostStatisticDialog: React.FC<DialogProps> = ({
                     )}
 
                     {likes?.map((user: BlogUser) => (
-                      <div className='w-full border-b border-neutral-300 pb-3'>
+                      <div
+                        className='w-full border-b border-neutral-300 pb-3'
+                        key={user.id}
+                      >
                         <UserBadgeOccupation
                           key={user.id}
                           name={user.name}
@@ -137,19 +141,6 @@ const PostStatisticDialog: React.FC<DialogProps> = ({
                         />
                       </div>
                     ))}
-                    {/* {new Array(totalLikes).fill(null).map((_, index) => (
-                      <div className='w-full border-b border-neutral-300 pb-3'>
-                        <UserBadgeOccupation
-                          key={index}
-                          name={`Dummy-User-${index + 1}`}
-                          avatarUrl='https://placehold.co/50'
-                          occupation='Frontend Developer'
-                          avatarUrlClassName='size-12'
-                          nameClassName='text-xs-semibold lg:text-sm-semibold text-neutral-900'
-                          occupationClassName='text-xs-regular lg:text-sm-regular text-neutral-600'
-                        />
-                      </div>
-                    ))} */}
                   </div>
                 </TabsContent>
                 <TabsContent
@@ -204,7 +195,7 @@ const PostStatisticDialog: React.FC<DialogProps> = ({
                 </TabsContent>
               </Tabs>
             </div>
-          </DialogDescription>
+          </div>
         </DialogBody>
       </DialogContent>
     </Dialog>
