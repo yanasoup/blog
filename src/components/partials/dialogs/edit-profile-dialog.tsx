@@ -15,8 +15,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-// import { CloudUploadIcon } from 'lucide-react';
-// import CameraIcon from '@/assets/icons/icon-camera.svg';
 import { Icon } from '@iconify-icon/react';
 import {
   Form,

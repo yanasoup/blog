@@ -22,6 +22,7 @@ import type { RootState } from '@/redux/store';
 import { useNavigate } from 'react-router';
 import { useBlogLogin } from '@/hooks/useAuth';
 import { AxiosError } from 'axios';
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
 const formSchema = z.object({
   email: z
@@ -81,7 +82,10 @@ const Login = () => {
         const authUser = await getUsersHandler(emailRef.current?.value || '');
         dispatch(
           setAuthenticated({
-            authUser: authUser,
+            authUser: {
+              ...authUser,
+              avatarUrl: `${apiBaseUrl}${authUser.avatarUrl}`,
+            },
             apiToken: loginResponse?.token!,
           })
         );
