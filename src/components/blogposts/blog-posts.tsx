@@ -173,7 +173,7 @@ const PostCard: React.FC<PostCardProps> = ({ ...post }) => {
             ))}
           </div>
           <div className='text-xs-regular md:text-sm-regular mt-3 line-clamp-2 text-neutral-900'>
-            <span dangerouslySetInnerHTML={{ __html: post.content }} />
+            <div dangerouslySetInnerHTML={{ __html: post.content }} />
           </div>
           <div className='mt-3 flex items-center gap-3'>
             <div className='flex-center flex gap-2'>
@@ -300,29 +300,37 @@ export const BlogPager: React.FC<BlogPagerProps> = ({
         <PaginationPrevious
           onClick={() => goToPage(currentPage - 1)}
           disabled={currentPage === 1}
+          className='lg:text-sm-regular text-xs-regular'
         />
       </PaginationItem>
     );
 
     for (let i = 1; i <= lastPage; i++) {
-      if (i === 1 || i === lastPage || Math.abs(i - currentPage) <= 1) {
+      // if (i === 1 || i === lastPage || Math.abs(i - currentPage) <= 1) {
+      // if (i === 1 || i === lastPage || i === currentPage) {
+      if (i === 1 || i === lastPage || i === currentPage) {
         pageButtons.push(
           <PaginationItem key={i}>
             <PaginationLink
               onClick={() => goToPage(i)}
               isActive={i === currentPage}
+              className={cn(
+                'lg:text-sm-regular text-xs-regular',
+                i === currentPage ? 'text-white' : 'text-neutral-900'
+              )}
             >
               {i}
             </PaginationLink>
           </PaginationItem>
         );
       } else if (
-        (i === currentPage - 2 && currentPage > 4) ||
-        (i === currentPage + 2 && currentPage < total - 3)
+        (i === currentPage - 1 && currentPage > 1) ||
+        (i === currentPage + 1 && currentPage < total - 3)
       ) {
+        console.log('else ', i);
         pageButtons.push(
-          <PaginationItem key='elipsisBtn'>
-            <PaginationEllipsis />
+          <PaginationItem key={i}>
+            <PaginationEllipsis className='lg:text-sm-regular text-xs-regular' />
           </PaginationItem>
         );
       }
@@ -333,6 +341,7 @@ export const BlogPager: React.FC<BlogPagerProps> = ({
         <PaginationNext
           onClick={() => goToPage(currentPage + 1)}
           disabled={currentPage === lastPage}
+          className='lg:text-sm-regular text-xs-regular'
         />
       </PaginationItem>
     );
@@ -341,8 +350,10 @@ export const BlogPager: React.FC<BlogPagerProps> = ({
   };
 
   return (
-    <Pagination className='mt-6'>
-      <PaginationContent>{renderPageNumbers()}</PaginationContent>
+    <Pagination className='flex-center mt-6 flex-wrap'>
+      <PaginationContent className='basis-80'>
+        {renderPageNumbers()}
+      </PaginationContent>
     </Pagination>
   );
 };

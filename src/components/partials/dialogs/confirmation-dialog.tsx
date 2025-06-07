@@ -68,7 +68,7 @@ const MyConfirmationDialog: React.FC<FormStatusDialogProps> = ({
               className='text-xs-semibold lg:text-sm-semibold text-neutral-25 w-fit'
             >
               {showLoader ? (
-                <BeatLoader color='#d5d7da' className='text-white' size={16} />
+                <BeatLoader color='#d5d7da' className='text-white' size={10} />
               ) : (
                 'Delete'
               )}

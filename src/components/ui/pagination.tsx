@@ -58,6 +58,7 @@ function PaginationLink({
           variant: isActive ? 'default' : 'ghost',
           size,
         }),
+        'lg:text-sm-regular text-xs-regular',
         className
       )}
       {...props}

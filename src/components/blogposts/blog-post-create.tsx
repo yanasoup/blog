@@ -7,6 +7,7 @@ import { useCreatePost } from '@/hooks/useCreatePost';
 import type { CreatePostParams, UseCreatePostParams } from '@/models/post';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
+import { AxiosError } from 'axios';
 const pageSize = import.meta.env.VITE_BLOG_PAGE_SIZE;
 import {
   Form,
@@ -21,7 +22,7 @@ import { CloudUploadIcon } from 'lucide-react';
 import { Button } from '../ui/button';
 import { BeatLoader } from 'react-spinners';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import DebugBox from '@/redux/debug-box';
 const MAX_FILE_SIZE = 1024 * 1024 * 5;
 const ACCEPTED_IMAGE_MIME_TYPES = ['image/jpeg', 'image/jpg', 'image/png'];
@@ -93,29 +94,17 @@ const BlogPostCreate = () => {
     mutate: createPost,
   } = useCreatePost(defaultPagingParam);
 
-  {
-    isSuccess &&
-      toast('Post Saved', {
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success('Post Saved', {
         description: `your post has been successfully saved!`,
-        action: {
-          label: 'Ok',
-          onClick: () => {},
-        },
       });
-    // form.reset();
-  }
-  {
-    error &&
-      toast('Failed!!', {
+    } else if (error instanceof AxiosError) {
+      toast.error('Failed!!', {
         description: `oops failed to save you post!`,
-        action: {
-          label: 'Ok',
-          onClick: () => {
-            console.log(error);
-          },
-        },
       });
-  }
+    }
+  });
 
   const onSubmit = (data: FormData) => {
     console.log('data', data);

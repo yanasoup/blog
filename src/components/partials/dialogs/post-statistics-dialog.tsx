@@ -102,8 +102,11 @@ const PostStatisticDialog: React.FC<DialogProps> = ({
                   className='max-h-[50vh] overflow-y-auto'
                 >
                   <div className='flex flex-col items-start justify-between gap-5 pt-3'>
+                    <div className='text-sm-bold lg:text-lg-bold mt-6 text-neutral-950'>
+                      Like ({totalLikes === 0 ? 0 : totalLikes})
+                    </div>
                     {isFetchingLikes && (
-                      <div className='flex-center mt-6 flex flex-col'>
+                      <div className='flex-center flex flex-col'>
                         <p className='text-xs-regular text-neutral-500'>
                           Loading likes...
                         </p>
@@ -114,9 +117,6 @@ const PostStatisticDialog: React.FC<DialogProps> = ({
                         />
                       </div>
                     )}
-                    <div className='text-sm-bold lg:text-lg-bold text-neutral-950'>
-                      Like ({totalLikes === 0 ? 0 : totalLikes})
-                    </div>
 
                     {likes?.map((user: BlogUser) => (
                       <div className='w-full border-b border-neutral-300 pb-3'>
@@ -157,8 +157,11 @@ const PostStatisticDialog: React.FC<DialogProps> = ({
                   className='max-h-[50vh] overflow-y-auto'
                 >
                   <div className='flex flex-col items-start justify-between gap-5 overflow-y-auto pt-3'>
+                    <div className='text-sm-bold lg:text-lg-bold mt-6 text-neutral-950'>
+                      Comment ({totalComments === 0 ? 0 : totalComments})
+                    </div>
                     {isFetchingComments && (
-                      <div className='flex-center mt-6 flex flex-col'>
+                      <div className='flex-center flex flex-col'>
                         <p className='text-xs-regular text-neutral-500'>
                           Loading comments...
                         </p>
@@ -169,9 +172,6 @@ const PostStatisticDialog: React.FC<DialogProps> = ({
                         />
                       </div>
                     )}
-                    <div className='text-sm-bold lg:text-lg-bold text-neutral-950'>
-                      Comment ({totalComments === 0 ? 0 : totalComments})
-                    </div>
                     {comments?.map((comment: Comment) => (
                       <div
                         key={comment.id}

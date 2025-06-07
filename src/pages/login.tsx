@@ -85,23 +85,15 @@ const Login = () => {
             apiToken: loginResponse?.token!,
           })
         );
-        toast('Login Success', {
+        toast.success('Login Success', {
           description: `Welcome back ${authUser.name}`,
-          action: {
-            label: 'Ok',
-            onClick: () => navigate('/'),
-          },
         });
         navigate('/');
       }
       getUserInfo();
     } else if (error instanceof AxiosError) {
-      toast('Login Failed!', {
-        description: `Error: ${error?.response?.data?.message}`,
-        action: {
-          label: 'Ok',
-          onClick: () => {},
-        },
+      toast.error('Login Failed!', {
+        description: `${error?.response?.data?.message}`,
       });
     }
   }, [isSuccess, error, navigate, dispatch]);

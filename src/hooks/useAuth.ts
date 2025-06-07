@@ -42,3 +42,35 @@ export const blogLogin = async ({ email, password }: BlogLoginParams) => {
   );
   return response.data;
 };
+
+export type useUpdatePasswordParams = {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+  authToken: string;
+};
+export const useUpdatePassword = () => {
+  return useMutation({
+    mutationFn: (params: useUpdatePasswordParams) => updatePassword(params),
+  });
+};
+
+export const updatePassword = async ({
+  currentPassword,
+  newPassword,
+  confirmPassword,
+  authToken,
+}: useUpdatePasswordParams) => {
+  const response = await customAxios.patch<BlogLoginResponse>(
+    '/users/password',
+    { currentPassword, newPassword, confirmPassword },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: '*/*',
+        Authorization: `Bearer ${authToken}`,
+      },
+    }
+  );
+  return response.data;
+};

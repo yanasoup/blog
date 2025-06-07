@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Navigation from '@/components/partials/navigation';
 import DebugBox from '@/redux/debug-box';
 
@@ -24,6 +24,9 @@ import { useSelector } from 'react-redux';
 import UserBadgeOccupation from '@/components/partials/user-badge-occupation';
 import { toast } from 'sonner';
 import { AxiosError } from 'axios';
+import UpdatePasswordForm from '@/components/forms/update-password-form';
+import { useUpdatePasswordParams, useUpdatePassword } from '@/hooks/useAuth';
+
 export const MyProfilelPage: React.FC = () => {
   const [showStatsDialog, setShowStatsDialog] = React.useState(false);
   const uiuxState = useSelector((state: RootState) => state.uiux);
@@ -75,7 +78,34 @@ export const MyProfilelPage: React.FC = () => {
     setSelectedPostId(postId);
   };
 
-  useEffect(() => {
+  const {
+    mutate: updatePassFn,
+    isSuccess: changePassSuccess,
+    error: changePassError,
+    isPending: changePassPending,
+  } = useUpdatePassword();
+  type UpdatePassParams = Omit<useUpdatePasswordParams, 'authToken'>;
+
+  const onUpdatePasswordFormSubmit = (updateparams: UpdatePassParams) => {
+    const data = { ...updateparams, authToken: uiuxState?.apiToken || '' };
+    updatePassFn(data);
+  };
+
+  React.useEffect(() => {
+    if (changePassSuccess) {
+      toast.success('Update Success', {
+        description: `Your password successfully updated`,
+      });
+    } else if (changePassError instanceof AxiosError) {
+      console.log('updateparams', changePassError);
+
+      toast.error('Update Failed!', {
+        description: `${changePassError?.response?.data?.message}`,
+      });
+    }
+  }, [changePassSuccess, changePassError]);
+
+  React.useEffect(() => {
     if (isDeleteSuccess) {
       setShowDeleteDlg(false);
     }
@@ -119,7 +149,7 @@ export const MyProfilelPage: React.FC = () => {
     <div>
       <Navigation />
       <DebugBox visible={false} />
-      <div className='custom-container max-w-[50rem] pt-12'>
+      <div className='custom-container max-w-[53rem] pt-12'>
         <div className='flex items-center justify-between rounded-xl border border-neutral-300 px-4 py-3 lg:px-6 lg:py-4'>
           <UserBadgeOccupation
             name={uiuxState.authUser?.name || 'Guest'}
@@ -190,7 +220,10 @@ export const MyProfilelPage: React.FC = () => {
               )}
             </TabsContent>
             <TabsContent value='password' className='py-5'>
-              Change Password
+              <UpdatePasswordForm
+                onSubmit={onUpdatePasswordFormSubmit}
+                isLoading={changePassPending}
+              />
             </TabsContent>
           </Tabs>
         </div>
@@ -251,7 +284,7 @@ const PostCard: React.FC<PostCardProps> = ({
             ))}
           </div>
           <div className='text-xs-regular md:text-sm-regular mt-3 line-clamp-2 text-neutral-900'>
-            {post.content}
+            <div dangerouslySetInnerHTML={{ __html: post.content }} />
           </div>
           <div className='mt-3 flex h-6 items-center gap-3'>
             <div className='flex-center flex'>
