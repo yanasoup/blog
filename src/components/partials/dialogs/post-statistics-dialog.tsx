@@ -20,7 +20,7 @@ import {
 } from '@/hooks/useGetPost';
 import UserBadgeOccupation from '@/components/partials/user-badge-occupation';
 import { BlogUser, Comment } from '@/models/post';
-// import { getRandomIntInclusive } from '@/lib/utils';
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
 interface DialogProps extends React.ComponentProps<typeof Dialog> {
   title: string;
@@ -172,7 +172,7 @@ const PostStatisticDialog: React.FC<DialogProps> = ({
                           <img
                             src={
                               comment.author.avatarUrl
-                                ? comment.author.avatarUrl
+                                ? `${apiBaseUrl}${comment?.author?.avatarUrl}`
                                 : 'https://placehold.co/48'
                             }
                             className='size-12 rounded-full'

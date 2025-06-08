@@ -48,19 +48,18 @@ const PostCommentsDialog: React.FC<FormStatusDialogProps> = ({
               <XIcon size={24} className='cursor-pointer' />
             </DialogClose>
           </DialogTitle>
-          <DialogDescription>
-            {getCommentsResult.isLoading && (
-              <div className='flex-center mt-6 flex h-[40vh] flex-col'>
-                <p className='text-xs-regular text-neutral-500'>
-                  Loading comments...
-                </p>
-                <BeatLoader color='#d5d7da' className='text-white' size={16} />
-              </div>
-            )}
-            {!getCommentsResult.isLoading && getCommentsResult.data && (
-              <PostComments params={getCommentsResult} postId={postId} />
-            )}
-          </DialogDescription>
+          <DialogDescription className='hidden' />
+          {getCommentsResult.isLoading && (
+            <div className='flex-center mt-6 flex h-[40vh] flex-col'>
+              <p className='text-xs-regular text-neutral-500'>
+                Loading comments...
+              </p>
+              <BeatLoader color='#d5d7da' className='text-white' size={16} />
+            </div>
+          )}
+          {!getCommentsResult.isLoading && getCommentsResult.data && (
+            <PostComments params={getCommentsResult} postId={postId} />
+          )}
         </DialogBody>
       </DialogContent>
     </Dialog>

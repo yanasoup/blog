@@ -5,6 +5,8 @@ import { cn } from '@/lib/utils';
 import { formatDate } from '@/lib/utils';
 
 import { Icon } from '@iconify-icon/react';
+import { useGetUser } from '@/hooks/useAuth';
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
 type PostDetailProps = {
   post: Post;
@@ -19,6 +21,7 @@ const PostDetail: React.FC<PostDetailProps> = ({
   const [isLiked, setIsLiked] = React.useState(isAlreadyLiked);
   const [totalLikes, setTotalLikes] = React.useState(post.likes);
 
+  const { data: articlleAuthor } = useGetUser(post.author.email);
   // console.log('isLiked', isLiked);
 
   async function handleLike() {
@@ -47,13 +50,17 @@ const PostDetail: React.FC<PostDetailProps> = ({
           <div className='flex-center flex gap-2'>
             <img
               className='size-10 rounded-full object-contain'
-              src='https://placehold.co/40'
+              src={
+                articlleAuthor?.avatarUrl
+                  ? `${apiBaseUrl}${articlleAuthor?.avatarUrl}`
+                  : 'https://placehold.co/40'
+              }
             />
             <span className='text-xs-medium md:text-sm-medium text-neutral-900'>
               {post.author.name}
             </span>
           </div>
-          <div className='size-1 rounded-full bg-neutral-400'></div>
+          <div className='size-1 rounded-full bg-neutral-400' />
           <div className='flex-center flex'>
             <span className='text-xs-regular md:text-sm-regular text-neutral-600'>
               {formatDate(post.createdAt)}
@@ -92,9 +99,10 @@ const PostDetail: React.FC<PostDetailProps> = ({
             src={post.imageUrl}
           />
         </div>
-        <div className='text-xs-regular md:text-sm-regular mt-4 text-neutral-900'>
-          {post.content}
-        </div>
+        <div
+          dangerouslySetInnerHTML={{ __html: post.content }}
+          className='text-xs-regular md:text-sm-regular mt-4 text-neutral-900'
+        />
       </div>
     </div>
   );

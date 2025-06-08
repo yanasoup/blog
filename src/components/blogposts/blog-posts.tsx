@@ -9,6 +9,7 @@ import { Icon } from '@iconify-icon/react';
 import React, { useState } from 'react';
 import { useUpdatePostLike } from '@/hooks/useUpdatePost';
 const pageSize = import.meta.env.VITE_BLOG_PAGE_SIZE;
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 import {
   Pagination,
   PaginationContent,

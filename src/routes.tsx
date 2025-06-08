@@ -29,6 +29,10 @@ export const router = createBrowserRouter([
     element: <BlogPostCreate />,
   },
   {
+    path: '/edit-post/:postId',
+    element: <BlogPostCreate />,
+  },
+  {
     path: '/myprofile',
     element: <MyProfilelPage />,
   },

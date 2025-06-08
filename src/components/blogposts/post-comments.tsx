@@ -13,6 +13,7 @@ import { BeatLoader } from 'react-spinners';
 import { useSendComment, UseSendCommentParams } from '@/hooks/usePostComments';
 import { PostCommentParams } from '@/hooks/usePostComments';
 import { toast } from 'sonner';
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
 import {
   Form,
@@ -36,8 +37,6 @@ type PostCommentsProps = {
   params: UseGetCommentsReturn;
 };
 const PostComments: React.FC<PostCommentsProps> = ({ params, postId }) => {
-  // const [showAllComments, setShowAllComments] = React.useState(false);
-
   const useCommentParams: UseSendCommentParams = {
     queryKey: ['posts-comments', postId!],
   };
@@ -136,7 +135,7 @@ const PostComments: React.FC<PostCommentsProps> = ({ params, postId }) => {
                   className='size-10 rounded-full object-contain'
                   src={
                     comment.author.avatarUrl
-                      ? comment.author.avatarUrl
+                      ? `${apiBaseUrl}${comment?.author?.avatarUrl}`
                       : 'https://placehold.co/40'
                   }
                 />

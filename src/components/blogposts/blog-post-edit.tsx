@@ -72,7 +72,7 @@ const defaultPagingParam: UseCreatePostParams = {
   ],
 };
 
-const BlogPostCreate = () => {
+const BlogPostEdit = () => {
   // console.log('render');
   const uiuxState = useSelector((state: RootState) => state.uiux);
   const [selectedImage, setSelectedImage] = React.useState<File | null>(null);
@@ -125,7 +125,7 @@ const BlogPostCreate = () => {
 
   return (
     <>
-      <EditingNavigation title='Write Post' />
+      <EditingNavigation title='Edit Post' />
       <DebugBox visible={false} />
       <div className='custom-container mt-12 flex flex-wrap'>
         <Form {...form}>
