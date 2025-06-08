@@ -35,18 +35,20 @@ import { UpdatePostParams, useUpdatePost } from '@/hooks/useUpdatePost';
 import { Badge } from '@/components/ui/badge';
 import { X } from 'lucide-react';
 import { UseGetPostReturn } from '@/hooks/useGetPost';
+import { cn } from '@/lib/utils';
 
 const formSchema = z.object({
   title: z
     .string({
       required_error: 'Please enter a title',
     })
+    .min(1, 'Please enter a title')
     .max(255),
   content: z
     .string({
       required_error: 'Please enter your content',
     })
-    .min(10, 'Konten minimal 10 karakter')
+    .min(50, 'Content should have minimum 50 letters')
     .refine((val) => val.replace(/<[^>]*>/g, '').trim().length > 0, {
       message: 'Please enter your content',
     }),
@@ -207,7 +209,12 @@ const PostEditor: React.FC<PostEditorProps> = ({
                   <FormLabel>Title</FormLabel>
                   <Input
                     {...field}
-                    className='text-sm-regular'
+                    className={cn(
+                      'text-sm-regular',
+                      form.formState.errors?.title
+                        ? 'border-[#EE1D52] focus:ring-[#EE1D52]'
+                        : ''
+                    )}
                     placeholder='Enter your title'
                     disabled={isPending}
                     // value={title}
@@ -230,7 +237,12 @@ const PostEditor: React.FC<PostEditorProps> = ({
                     theme='snow'
                     value={field.value}
                     onChange={field.onChange}
-                    className='mb-12 h-[200px]'
+                    className={cn(
+                      'mb-12 h-[200px]',
+                      form.formState.errors?.content
+                        ? 'border-[#EE1D52] focus:ring-[#EE1D52]'
+                        : ''
+                    )}
                   />
                   <FormMessage />
                 </FormItem>

@@ -22,6 +22,7 @@ import type { RootState } from '@/redux/store';
 import { useNavigate } from 'react-router';
 import { useBlogLogin } from '@/hooks/useAuth';
 import { AxiosError } from 'axios';
+import { cn } from '@/lib/utils';
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
 const formSchema = z.object({
@@ -123,7 +124,12 @@ const Login = () => {
                   <Input
                     {...field}
                     ref={emailRef}
-                    className='text-sm-regular'
+                    className={cn(
+                      'text-sm-regular',
+                      form.formState.errors?.email
+                        ? 'border-[#EE1D52] focus:ring-[#EE1D52]'
+                        : ''
+                    )}
                     placeholder='Enter your email'
                     disabled={isPending}
                     type='email'
@@ -142,7 +148,12 @@ const Login = () => {
                     <Input
                       {...field}
                       ref={passwordRef}
-                      className='text-sm-regular'
+                      className={cn(
+                        'text-sm-regular',
+                        form.formState.errors?.password
+                          ? 'border-[#EE1D52] focus:ring-[#EE1D52]'
+                          : ''
+                      )}
                       placeholder='Enter your password'
                       disabled={isPending}
                       type={showPassword ? 'text' : 'password'}

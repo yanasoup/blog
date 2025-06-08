@@ -16,6 +16,7 @@ import { customAxios } from '@/lib/customAxios';
 import { BeatLoader } from 'react-spinners';
 
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const formSchema = z
   .object({
@@ -64,14 +65,6 @@ const Register = () => {
     else setShowPasswordConfirm(!showPasswordConfirm);
   };
 
-  // const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (event.target.name === 'password') {
-  //     setPassword(event.target.value);
-  //   } else {
-  //     setPasswordConfirm(event.target.value);
-  //   }
-  // };
-
   const onSubmit = async (data: RegisterFormData) => {
     // console.log('data', data);
     setLoading(true);
@@ -111,7 +104,12 @@ const Register = () => {
                   <FormLabel>Name</FormLabel>
                   <Input
                     {...field}
-                    className='text-sm-regular'
+                    className={cn(
+                      'text-sm-regular',
+                      form.formState.errors?.name
+                        ? 'border-[#EE1D52] focus:ring-[#EE1D52]'
+                        : ''
+                    )}
                     placeholder='Enter your name'
                     disabled={loading}
                     type='text'
@@ -128,7 +126,12 @@ const Register = () => {
                   <FormLabel>Email</FormLabel>
                   <Input
                     {...field}
-                    className='text-sm-regular'
+                    className={cn(
+                      'text-sm-regular',
+                      form.formState.errors?.email
+                        ? 'border-[#EE1D52] focus:ring-[#EE1D52]'
+                        : ''
+                    )}
                     placeholder='Enter your email'
                     disabled={loading}
                     type='email'
@@ -146,7 +149,12 @@ const Register = () => {
                   <div className='relative'>
                     <Input
                       {...field}
-                      className='text-sm-regular'
+                      className={cn(
+                        'text-sm-regular',
+                        form.formState.errors?.password
+                          ? 'border-[#EE1D52] focus:ring-[#EE1D52]'
+                          : ''
+                      )}
                       placeholder='Enter your password'
                       disabled={loading}
                       type={showPassword ? 'text' : 'password'}
@@ -187,12 +195,15 @@ const Register = () => {
                   <div className='relative'>
                     <Input
                       {...field}
-                      className='text-sm-regular'
+                      className={cn(
+                        'text-sm-regular',
+                        form.formState.errors?.confirm_password
+                          ? 'border-[#EE1D52] focus:ring-[#EE1D52]'
+                          : ''
+                      )}
                       placeholder='Enter your confirm password'
                       disabled={loading}
                       type={showPasswordConfirm ? 'text' : 'password'}
-                      // onChange={handleInputChange}
-                      // value={passwordConfirm}
                     />
                     <div className='pointer-events-auto absolute inset-y-0 right-0 flex items-center pr-3'>
                       <button
