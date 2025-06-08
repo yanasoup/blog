@@ -58,7 +58,11 @@ const UserProfileButton = () => {
           children={
             <img
               className='size-10 cursor-pointer rounded-full object-contain lg:hidden'
-              src='https://placehold.co/40'
+              src={
+                uiuxState.authUser?.avatarUrl
+                  ? uiuxState.authUser?.avatarUrl
+                  : 'https://placehold.co/40'
+              }
             />
           }
         />

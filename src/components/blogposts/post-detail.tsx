@@ -6,29 +6,46 @@ import { formatDate } from '@/lib/utils';
 
 import { Icon } from '@iconify-icon/react';
 import { useGetUser } from '@/hooks/useAuth';
+import { toast } from 'sonner';
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
 type PostDetailProps = {
   post: Post;
   onLiked: (id: number) => void;
   isAlreadyLiked: boolean;
+  isEnabled?: boolean;
+  isLikedSuccess?: boolean;
+  isError?: boolean;
+  error?: Error;
 };
 const PostDetail: React.FC<PostDetailProps> = ({
   post,
   onLiked,
   isAlreadyLiked,
+  isEnabled,
 }) => {
   const [isLiked, setIsLiked] = React.useState(isAlreadyLiked);
   const [totalLikes, setTotalLikes] = React.useState(post.likes);
 
   const { data: articlleAuthor } = useGetUser(post.author.email);
-  // console.log('isLiked', isLiked);
 
   async function handleLike() {
-    setIsLiked(!isLiked);
-    setTotalLikes(isLiked ? totalLikes - 1 : totalLikes + 1);
-    onLiked(post.id);
+    if (isEnabled) {
+      setIsLiked(!isLiked);
+      setTotalLikes(isLiked ? totalLikes - 1 : totalLikes + 1);
+      onLiked(post.id);
+    } else {
+      toast.error('please login first to like this post');
+    }
   }
+
+  // useEffect(() => {
+  //   if (!isLikedSuccess) {
+  //     toast.error('failed to like post');
+  //     setTotalLikes(isLiked ? totalLikes - 1 : totalLikes + 1);
+  //     onLiked(post.id);
+  //   }
+  // }, [isLikedSuccess]);
 
   return (
     <div className='mt-6 flex flex-col gap-6'>

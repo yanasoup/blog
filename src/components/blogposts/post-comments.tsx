@@ -56,7 +56,6 @@ const PostComments: React.FC<PostCommentsProps> = ({ params, postId }) => {
 
   const handlePostComment = async (data: FormData) => {
     if (!postId) {
-      console.error('postId is undefined');
       return;
     }
     // const formData = form.getValues();
@@ -84,45 +83,50 @@ const PostComments: React.FC<PostCommentsProps> = ({ params, postId }) => {
   const uiuxState = useSelector((state: RootState) => state.uiux);
   return (
     <>
-      <Form {...form}>
-        <form
-          className='mx-auto max-w-180 space-y-4 md:space-y-6'
-          onSubmit={form.handleSubmit(handlePostComment)}
-        >
-          <FormField
-            control={form.control}
-            name='comment'
-            render={({ field }) => (
-              <FormItem className='mt-5 gap-1 text-left'>
-                <FormLabel className='text-sm-semibold text-neutral-950'>
-                  Give your Comments
-                </FormLabel>
-                <Textarea
-                  {...field}
-                  className='text-sm-regular h-40 w-full rounded-xl border-neutral-300 px-4 py-2 text-left'
-                  placeholder='Enter your comment'
-                  disabled={isPostComentLoading}
-                />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <div className='mt-3 flex items-center justify-end'>
-            <Button
-              disabled={isPostComentLoading}
-              type='submit'
-              className='w-fit px-21'
-            >
-              {isPostComentLoading ? (
-                <BeatLoader color='#d5d7da' className='text-white' size={16} />
-              ) : (
-                'Send'
+      {uiuxState.isAuthenticated && (
+        <Form {...form}>
+          <form
+            className='mx-auto max-w-180 space-y-4 md:space-y-6'
+            onSubmit={form.handleSubmit(handlePostComment)}
+          >
+            <FormField
+              control={form.control}
+              name='comment'
+              render={({ field }) => (
+                <FormItem className='mt-5 gap-1 text-left'>
+                  <FormLabel className='text-sm-semibold text-neutral-950'>
+                    Give your Comments
+                  </FormLabel>
+                  <Textarea
+                    {...field}
+                    className='text-sm-regular h-40 w-full rounded-xl border-neutral-300 px-4 py-2 text-left'
+                    placeholder='Enter your comment'
+                    disabled={isPostComentLoading}
+                  />
+                  <FormMessage />
+                </FormItem>
               )}
-            </Button>
-          </div>
-        </form>
-      </Form>
-
+            />
+            <div className='mt-3 flex items-center justify-end'>
+              <Button
+                disabled={isPostComentLoading}
+                type='submit'
+                className='w-fit px-21'
+              >
+                {isPostComentLoading ? (
+                  <BeatLoader
+                    color='#d5d7da'
+                    className='text-white'
+                    size={16}
+                  />
+                ) : (
+                  'Send'
+                )}
+              </Button>
+            </div>
+          </form>
+        </Form>
+      )}
       {params.data && (
         <>
           {params.data.map((comment) => (

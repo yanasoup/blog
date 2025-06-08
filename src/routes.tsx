@@ -7,6 +7,7 @@ import BlogPostCreate from './components/blogposts/blog-post-create';
 import PostDetailPage from './pages/post-detail-page';
 import MyProfilelPage from './pages/myprofile-page';
 import BlogPostEdit from './components/blogposts/blog-post-edit';
+import SearchResult from './pages/search';
 
 export const router = createBrowserRouter([
   {
@@ -23,18 +24,19 @@ export const router = createBrowserRouter([
     children: [
       { index: true, Component: Home },
       { path: '/post/:postId', Component: PostDetailPage },
+      { path: '/search', Component: SearchResult },
     ],
   },
   {
     path: '/write-post',
-    element: <BlogPostCreate />,
+    Component: BlogPostCreate,
   },
   {
     path: '/edit-post/:postId',
-    element: <BlogPostEdit />,
+    Component: BlogPostEdit,
   },
   {
     path: '/myprofile',
-    element: <MyProfilelPage />,
+    Component: MyProfilelPage,
   },
 ]);

@@ -270,3 +270,52 @@ export const getLikes: QueryFunction<BlogUser[]> = async ({
 
   return response.data;
 };
+
+export type UseSearchPostsParams = [
+  string,
+  string,
+  { limit: number; page: number },
+];
+export const searchPosts: QueryFunction<
+  GetPostsResponse,
+  UseSearchPostsParams
+> = async ({ queryKey, signal }) => {
+  const axiosRequestConfig: AxiosRequestConfig = {
+    signal,
+    params: {
+      query: queryKey[1],
+      page: queryKey[2].page,
+      limit: queryKey[2].limit,
+    },
+  };
+
+  const response = await customAxios.get<GetPostsResponse>(
+    '/posts/search',
+    axiosRequestConfig
+  );
+
+  return response.data;
+};
+
+export const useSearchPosts = ([
+  qkey,
+  searchQuery,
+  { limit = pageSize, page = 1 },
+]: UseSearchPostsParams): UseGetPostsReturn => {
+  const { data, isLoading, isFetching, error } = useQuery({
+    queryKey: [qkey, searchQuery, { limit: limit, page: page }],
+    queryFn: searchPosts,
+    enabled: !!searchQuery,
+  });
+
+  const recommendedPosts = data ?? emptyPostResponse;
+  const totalData = data?.total ?? 0;
+
+  return {
+    Posts: recommendedPosts,
+    totalData,
+    isLoading,
+    isFetching,
+    error,
+  };
+};

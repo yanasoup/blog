@@ -129,7 +129,7 @@ const PostStatisticDialog: React.FC<DialogProps> = ({
                           name={user.name}
                           avatarUrl={
                             user.avatarUrl
-                              ? user.avatarUrl
+                              ? `${apiBaseUrl}${user.avatarUrl}`
                               : 'https://placehold.co/50'
                           }
                           occupation={

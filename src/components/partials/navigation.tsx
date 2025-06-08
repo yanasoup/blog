@@ -6,6 +6,7 @@ import { motion } from 'motion/react';
 import { useSelector } from 'react-redux';
 import { PenLineIcon } from 'lucide-react';
 import { MenuIcon, SearchIcon } from 'lucide-react';
+import React from 'react';
 import {
   Sheet,
   SheetTrigger,
@@ -16,9 +17,24 @@ import {
 } from '@/components/ui/sheet';
 import type { RootState } from '@/redux/store';
 import UserProfileButton from './user-profile-button';
+import { useNavigate } from 'react-router';
 
 const Navigation = () => {
   const uiuxState = useSelector((state: RootState) => state.uiux);
+  const [query, setQuery] = React.useState('');
+  const fsearch = React.useRef<HTMLFormElement>(null);
+  const navigate = useNavigate();
+
+  function handleSearchIputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setQuery(e.target.value);
+  }
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const q = query.trim();
+    fsearch.current?.reset();
+    navigate(`/search?q=${encodeURIComponent(q)}`);
+  }
 
   return (
     <div className='border-b border-neutral-300'>
@@ -30,12 +46,15 @@ const Navigation = () => {
           </NavLink>
         </div>
 
-        <Input
-          className='text-sm-regular hidden flex-2 md:max-w-93 md:min-w-80 lg:block'
-          placeholder='Search'
-          type='text'
-        />
-
+        <form onSubmit={handleSubmit}>
+          <Input
+            className='text-sm-regular hidden flex-2 md:max-w-93 md:min-w-80 lg:block'
+            placeholder='Search'
+            type='text'
+            onChange={handleSearchIputChange}
+            required
+          />
+        </form>
         <nav>
           <div className='hidden items-center justify-center gap-2 divide-neutral-300 lg:flex'>
             {uiuxState.isAuthenticated ? (
@@ -74,60 +93,65 @@ const Navigation = () => {
               <UserProfileButton />
             </div>
           )}
-        </nav>
 
-        {!uiuxState.isAuthenticated && (
-          <div className='flex gap-6'>
-            <div className='flex items-center justify-center gap-6 lg:hidden'>
-              <SearchIcon
-                size={24}
-                className='cursor-pointer text-neutral-950'
-                onClick={() => console.log('search')}
-              />
-            </div>
-
-            <Sheet>
-              <SheetTrigger asChild>
-                <MenuIcon
+          {!uiuxState.isAuthenticated && (
+            <div className='flex gap-6'>
+              <div className='flex items-center justify-center gap-6 lg:hidden'>
+                <SearchIcon
                   size={24}
-                  className='cursor-pointer text-neutral-950 lg:hidden'
+                  className='cursor-pointer text-neutral-950'
+                  onClick={() => {
+                    // console.log('search');
+                    navigate('/search');
+                  }}
                 />
-              </SheetTrigger>
-              <SheetContent>
-                <SheetHeader className='hidden'>
-                  <SheetDescription className='sr-only'>Menu</SheetDescription>
-                </SheetHeader>
+              </div>
 
-                <div className='flex flex-col'>
-                  <div className='flex h-20 items-center justify-start gap-2 border-b border-neutral-300 px-4'>
-                    <img src={Logo} />
-                    <h1>My Blog</h1>
+              <Sheet>
+                <SheetTrigger asChild>
+                  <MenuIcon
+                    size={24}
+                    className='cursor-pointer text-neutral-950 lg:hidden'
+                  />
+                </SheetTrigger>
+                <SheetContent>
+                  <SheetHeader className='hidden'>
+                    <SheetDescription className='sr-only'>
+                      Menu
+                    </SheetDescription>
+                  </SheetHeader>
+
+                  <div className='flex flex-col'>
+                    <div className='flex h-20 items-center justify-start gap-2 border-b border-neutral-300 px-4'>
+                      <img src={Logo} />
+                      <h1>My Blog</h1>
+                    </div>
+
+                    <motion.nav className='mt-4'>
+                      <ul className='flex flex-col items-center justify-center gap-4'>
+                        <li>
+                          <SheetClose asChild>
+                            <NavLink
+                              className='text-md-regular text-primary-300 hover:text-primary-200 p-2 underline'
+                              to='/login'
+                            >
+                              Login
+                            </NavLink>
+                          </SheetClose>
+                        </li>
+                        <li>
+                          <Button asChild className='w-fit'>
+                            <NavLink to='/register'>Register</NavLink>
+                          </Button>
+                        </li>
+                      </ul>
+                    </motion.nav>
                   </div>
-
-                  <motion.nav className='mt-4'>
-                    <ul className='flex flex-col items-center justify-center gap-4'>
-                      <li>
-                        <SheetClose asChild>
-                          <NavLink
-                            className='text-md-regular text-primary-300 hover:text-primary-200 p-2 underline'
-                            to='/login'
-                          >
-                            Login
-                          </NavLink>
-                        </SheetClose>
-                      </li>
-                      <li>
-                        <Button asChild className='w-fit'>
-                          <NavLink to='/register'>Register</NavLink>
-                        </Button>
-                      </li>
-                    </ul>
-                  </motion.nav>
-                </div>
-              </SheetContent>
-            </Sheet>
-          </div>
-        )}
+                </SheetContent>
+              </Sheet>
+            </div>
+          )}
+        </nav>
       </header>
     </div>
   );

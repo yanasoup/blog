@@ -42,10 +42,10 @@ export const PostDetailPage: React.FC = () => {
     postId: match?.params.postId,
   };
   const getCommentsResult = useGetComments(paramsComments);
-  const { mutate: updatePostLikeFn } = useUpdatePostLike();
+  const { mutate: updatePostLikeFn, isSuccess } = useUpdatePostLike();
 
   async function handleLike(id: number) {
-    updatePostLikeFn(id);
+    updatePostLikeFn({ id: id, authToken: uiuxState.apiToken! });
     setLikedPost((prev) => [...prev, id]);
     dispatch(addToLikedPost(id));
   }
@@ -74,6 +74,8 @@ export const PostDetailPage: React.FC = () => {
             post={getPostResult.post}
             isAlreadyLiked={likedPost.includes(getPostResult.post.id)}
             onLiked={handleLike}
+            isEnabled={uiuxState.isAuthenticated}
+            isLikedSuccess={isSuccess}
           />
         )}
 
@@ -82,9 +84,11 @@ export const PostDetailPage: React.FC = () => {
             <h3 className='text-xl-bold lg:display-xs-bold text-left text-neutral-900'>
               Comments ({getCommentsResult.data?.length || 0})
             </h3>
-            <div className='mt-2 flex flex-col gap-2 text-left'>
-              <CommentLoggedUser />
-            </div>
+            {uiuxState.isAuthenticated && (
+              <div className='mt-2 flex flex-col gap-2 text-left'>
+                <CommentLoggedUser />
+              </div>
+            )}
             {getCommentsResult.isLoading && (
               <div className='flex-center mt-6 flex flex-col'>
                 <p className='text-xs-regular text-neutral-500'>
