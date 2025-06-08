@@ -104,7 +104,7 @@ const BlogPostCreate = () => {
         description: `oops failed to save you post!`,
       });
     }
-  });
+  }, [isSuccess, error]);
 
   const onSubmit = () => {
     const formData = form.getValues();
@@ -115,7 +115,7 @@ const BlogPostCreate = () => {
       image: selectedImage,
       tags: formData.tags.split(','),
     };
-    console.log('newPost', newPost);
+
     const createParams: CreatePostParams = {
       data: newPost,
       requestToken: uiuxState.apiToken!,

@@ -6,6 +6,7 @@ import { MainLayout } from './layouts/mainLayout';
 import BlogPostCreate from './components/blogposts/blog-post-create';
 import PostDetailPage from './pages/post-detail-page';
 import MyProfilelPage from './pages/myprofile-page';
+import BlogPostEdit from './components/blogposts/blog-post-edit';
 
 export const router = createBrowserRouter([
   {
@@ -30,7 +31,7 @@ export const router = createBrowserRouter([
   },
   {
     path: '/edit-post/:postId',
-    element: <BlogPostCreate />,
+    element: <BlogPostEdit />,
   },
   {
     path: '/myprofile',

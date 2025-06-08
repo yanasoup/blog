@@ -298,7 +298,6 @@ export const MyProfilelPage: React.FC = () => {
 
 type PostCardProps = Post & {
   onStartDelete: (id: number) => void;
-  // onStartEdit: () => void;
   onShowStats: (id: number) => void;
 };
 const PostCard: React.FC<PostCardProps> = ({
@@ -357,7 +356,7 @@ const PostCard: React.FC<PostCardProps> = ({
             <div className='h-[70%] w-0.25 bg-neutral-300' />
 
             <NavLink
-              to={`#`}
+              to={`/edit-post/${post.id}`}
               className='text-xs-semibold md:text-sm-semibold text-primary-300 underline'
             >
               Edit

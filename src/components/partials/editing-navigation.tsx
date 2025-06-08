@@ -4,7 +4,12 @@ import type { RootState } from '@/redux/store';
 import UserProfileButton from './user-profile-button';
 import { ArrowLeftIcon } from 'lucide-react';
 
-const EditingNavigation = () => {
+type NavigationProps = {
+  title?: string;
+};
+const EditingNavigation: React.FC<NavigationProps> = ({
+  title = 'Write Post',
+}) => {
   const uiuxState = useSelector((state: RootState) => state.uiux);
   return (
     <div className='border-b border-neutral-300'>
@@ -12,7 +17,7 @@ const EditingNavigation = () => {
         <div>
           <NavLink to='/' className='flex-center flex gap-4'>
             <ArrowLeftIcon className='size-6 text-neutral-900' />
-            <h1 className='display-xs-bold text-neutral-900'>Write Post</h1>
+            <h1 className='display-xs-bold text-neutral-900'>{title}</h1>
           </NavLink>
         </div>
 

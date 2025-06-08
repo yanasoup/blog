@@ -64,12 +64,6 @@ const EditProfileDialog: React.FC<DialogProps> = ({
   ...props
 }) => {
   const uiuxState = useSelector((state: RootState) => state.uiux);
-  // const nameRef= React.useRef<HTMLInputElement>(null);
-  // const headlineRef= React.useRef<HTMLInputElement>(null);
-  // const [inputName, setInputName] = React.useState(uiuxState.authUser?.name);
-  // const [inputHeadline, setInputHeadline] = React.useState(
-  //   uiuxState.authUser?.headline
-  // );
   const [selectedImage, setSelectedImage] = React.useState<File | null>(null);
 
   const form = useForm<FormData>({
