@@ -31,7 +31,7 @@ import { useUpdateProfile, UpdateProfileParams } from '@/hooks/useAuth';
 import { customAxios } from '@/lib/customAxios';
 import { setAuthUser } from '@/redux/ui-slice';
 import { useDispatch } from 'react-redux';
-
+const pageSize = import.meta.env.VITE_BLOG_PAGE_SIZE;
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 export const MyProfilelPage: React.FC = () => {
   const dispatch = useDispatch();
@@ -55,7 +55,7 @@ export const MyProfilelPage: React.FC = () => {
 
   const getPostsParams: UseGetPostsParams = [
     'my-posts',
-    { limit: 2, page: currentPage },
+    { limit: pageSize, page: currentPage },
   ];
   const {
     Posts: posts,

@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import type { QueryFunction } from '@tanstack/react-query';
 import { customAxios } from '@/lib/customAxios';
 import type { GetPostsResponse } from '@/models/post';
@@ -62,6 +62,12 @@ type UseGetPostsReturn = {
   isLoading: boolean;
   isFetching: boolean;
   error: Error | null;
+};
+
+export const getPostById = async (postId: number | string) => {
+  const response = await customAxios.get<Post>(`/posts/${postId}`);
+
+  return response.data;
 };
 
 export const getPost: QueryFunction<Post> = async ({ queryKey, signal }) => {
@@ -316,6 +322,37 @@ export const useSearchPosts = ([
     totalData,
     isLoading,
     isFetching,
+    error,
+  };
+};
+
+export const getPostNoQKey = async (postId: string) => {
+  const response = await customAxios.get<Post>(`/posts/${postId}`);
+
+  return response.data;
+};
+export type UseGetPostParamsNoQKey = {
+  postId: number;
+};
+
+export const useGetPostNoQKey = () => {
+  // const queryClient = useQueryClient();
+  const { mutate, data, isPending, error } = useMutation({
+    mutationFn: (postId: string) => getPostNoQKey(postId),
+    // onSettled: () => {
+    //   queryClient.invalidateQueries({ queryKey: ['post', postId] });
+    // },
+  });
+
+  const post = data ?? undefined;
+  const totalData = data ? 1 : 0;
+
+  return {
+    getPostData: mutate,
+    post,
+    totalData,
+    isFetching: isPending,
+    isLoading: isPending,
     error,
   };
 };

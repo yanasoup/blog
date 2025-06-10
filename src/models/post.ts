@@ -26,7 +26,7 @@ export type CreatePostParams = {
     title: string;
     content: string;
     tags: string[];
-    image: any;
+    image?: any;
   };
   requestToken: string;
 };

@@ -285,3 +285,21 @@ img {
   touch-action: none; /* Disable touch gestures */
   -webkit-user-select: none; /* For Safari */
 }
+
+/* styles/quill-custom.css */
+
+.ql-container {
+  border: none !important;
+}
+
+.ql-toolbar {
+  border: none !important;
+  border-bottom: 1px solid #d5d7da !important;
+}
+
+.ql-editor {
+  border: none !important;
+  height: 12.5rem !important;
+  overflow-y: scroll !important;
+  overflow-x: hidden !important;
+}
