@@ -56,6 +56,7 @@ export const MyProfilelPage: React.FC = () => {
   const getPostsParams: UseGetPostsParams = [
     'my-posts',
     { limit: pageSize, page: currentPage },
+    uiuxState?.apiToken!,
   ];
   const {
     Posts: posts,

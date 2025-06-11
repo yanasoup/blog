@@ -54,7 +54,11 @@ export const useGetComments = ({
   };
 };
 
-export type UseGetPostsParams = [string, { limit: number; page: number }];
+export type UseGetPostsParams = [
+  string,
+  { limit: number; page: number },
+  string?,
+];
 
 type UseGetPostsReturn = {
   Posts: GetPostsResponse;
@@ -196,9 +200,10 @@ export const useGetMostLikedPosts = ([
 export const useGetMyPosts = ([
   qkey,
   { limit = pageSize, page = 1 },
+  apiToken,
 ]: UseGetPostsParams): UseGetPostsReturn => {
   const { data, isLoading, isFetching, error } = useQuery({
-    queryKey: [qkey, { limit: limit, page: page }],
+    queryKey: [qkey, { limit: limit, page: page }, apiToken],
     queryFn: getMyPosts,
   });
 
@@ -221,10 +226,17 @@ export const getMyPosts: QueryFunction<
   const axiosRequestConfig: AxiosRequestConfig = {
     signal,
     params: { page: queryKey[1].page, limit: queryKey[1].limit },
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      Authorization: `Bearer ${queryKey[2]}`,
+    },
   };
 
+  console.log('axiosRequestConfig', axiosRequestConfig);
+
   const response = await customAxios.get<GetPostsResponse>(
-    '/posts/most-liked',
+    '/posts/my-posts',
     axiosRequestConfig
   );
   return response.data;
