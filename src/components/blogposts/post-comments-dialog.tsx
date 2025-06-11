@@ -25,7 +25,7 @@ const PostCommentsDialog: React.FC<FormStatusDialogProps> = ({
   ...props
 }) => {
   const paramsComments: UseGetPostParams = {
-    qkey: 'post-comments-list',
+    qkey: 'post-comments',
     postId: postId,
   };
   const getCommentsResult = useGetComments(paramsComments);

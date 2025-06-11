@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { UseGetCommentsReturn } from '@/models/post';
 import { formatDate } from '@/lib/utils';
 import { useSelector } from 'react-redux';
@@ -10,7 +10,10 @@ import { Button } from '../ui/button';
 import { z } from 'zod';
 import { Textarea } from '@/components/ui/textarea';
 import { BeatLoader } from 'react-spinners';
-import { useSendComment, UseSendCommentParams } from '@/hooks/usePostComments';
+import {
+  useSendCommentOptimistic,
+  UseSendCommentParams,
+} from '@/hooks/usePostComments';
 import { PostCommentParams } from '@/hooks/usePostComments';
 import { toast } from 'sonner';
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
@@ -37,15 +40,18 @@ type PostCommentsProps = {
   params: UseGetCommentsReturn;
 };
 const PostComments: React.FC<PostCommentsProps> = ({ params, postId }) => {
+  const [isAvatarLoaded, setIsAvatarLoaded] = React.useState(false);
+  const [tmpCommentId, setTmpCommentId] = React.useState(0);
   const useCommentParams: UseSendCommentParams = {
-    queryKey: ['posts-comments', postId!],
+    queryKey: ['post-comments', postId!],
   };
 
   const {
     isPending: isPostComentLoading,
     isSuccess: isPostComentSuccess,
+    error: postCommentError,
     mutate: sendComment,
-  } = useSendComment(useCommentParams);
+  } = useSendCommentOptimistic(useCommentParams);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -59,6 +65,8 @@ const PostComments: React.FC<PostCommentsProps> = ({ params, postId }) => {
       return;
     }
     // const formData = form.getValues();
+    const tmpId = Math.floor(Math.random() * (1000000 - 200) + 200);
+    setTmpCommentId(tmpId);
     const postData: PostCommentParams = {
       postId,
       authToken: uiuxState.apiToken!,
@@ -66,20 +74,39 @@ const PostComments: React.FC<PostCommentsProps> = ({ params, postId }) => {
         userId: uiuxState.authUser?.id!,
         content: data.comment,
       },
+      queryKey: ['post-comments', postId],
+      optimisticData: {
+        id: tmpId,
+        content: data.comment,
+        createdAt: new Date().toISOString(),
+        author: {
+          id: uiuxState.authUser?.id!,
+          name: uiuxState.authUser?.name!,
+          headline: uiuxState.authUser?.headline!,
+          avatarUrl: uiuxState.authUser?.avatarUrl!,
+        },
+      },
     };
     sendComment(postData);
+    form.reset();
   };
 
-  {
-    isPostComentSuccess &&
-      toast('Comment Saved', {
+  useEffect(() => {
+    if (isPostComentSuccess) {
+      toast.success('Comment Saved', {
         description: `Thanks for your comment`,
         action: {
           label: 'Ok',
           onClick: () => console.log('Ok'),
         },
       });
-  }
+    }
+    if (postCommentError) {
+      toast.error(`Failed to save comment! please try again in a moment`);
+      // console.log('postCommentError', postCommentError);
+    }
+  }, [isPostComentSuccess, postCommentError]);
+
   const uiuxState = useSelector((state: RootState) => state.uiux);
   return (
     <>
@@ -134,27 +161,46 @@ const PostComments: React.FC<PostCommentsProps> = ({ params, postId }) => {
               key={comment.id}
               className='mt-4 flex flex-col gap-2 border-t border-neutral-300 pt-4'
             >
-              <div className='flex items-center justify-start gap-2'>
-                <img
-                  className='size-10 rounded-full object-contain'
-                  src={
-                    comment.author.avatarUrl
-                      ? `${apiBaseUrl}${comment?.author?.avatarUrl}`
-                      : 'https://placehold.co/40'
-                  }
-                />
-                <div className='flex flex-col items-start justify-center'>
-                  <span className='text-xs-medium md:text-sm-medium text-left text-neutral-900'>
-                    {comment.author.name}
-                  </span>
-                  <span className='text-xs-regular md:text-sm-regular text-left text-neutral-600'>
-                    {formatDate(comment.createdAt)}
-                  </span>
+              {/* {comment.id !== tmpCommentId && ( */}
+              <div className='relative'>
+                {isPostComentLoading && comment.id === tmpCommentId && (
+                  <div className='absolute inset-0 flex h-full w-full flex-col items-center justify-center'>
+                    <BeatLoader color='#ded6d6' />
+                    <p className='text-xs-regular text-neutral-400'>
+                      posting comments...
+                    </p>
+                  </div>
+                )}
+                <div className='flex items-center justify-start gap-2'>
+                  {!isAvatarLoaded && (
+                    <div className='flex h-full w-full items-center justify-start text-neutral-200'>
+                      <BeatLoader color='#ded6d6' size={8} />
+                    </div>
+                  )}
+
+                  <img
+                    className='size-10 rounded-full object-contain'
+                    src={
+                      comment.author.avatarUrl
+                        ? `${apiBaseUrl}${comment?.author?.avatarUrl}`
+                        : 'https://placehold.co/40'
+                    }
+                    onLoad={() => setIsAvatarLoaded(true)}
+                  />
+                  <div className='flex flex-col items-start justify-center'>
+                    <span className='text-xs-medium md:text-sm-medium text-left text-neutral-900'>
+                      {comment.author.name}
+                    </span>
+                    <span className='text-xs-regular md:text-sm-regular text-left text-neutral-600'>
+                      {formatDate(comment.createdAt)}
+                    </span>
+                  </div>
                 </div>
+                <p className='text-xs-regular md:text-sm-regular text-left text-neutral-900'>
+                  {comment.content}
+                </p>
               </div>
-              <p className='text-xs-regular md:text-sm-regular text-left text-neutral-900'>
-                {comment.content}
-              </p>
+              {/* )} */}
             </div>
           ))}
         </>
