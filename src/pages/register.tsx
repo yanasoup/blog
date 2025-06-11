@@ -14,9 +14,11 @@ import { Button } from '@/components/ui/button';
 import { NavLink } from 'react-router';
 import { customAxios } from '@/lib/customAxios';
 import { BeatLoader } from 'react-spinners';
+import { toast } from 'sonner';
 
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useNavigate } from 'react-router';
 
 const formSchema = z
   .object({
@@ -44,6 +46,7 @@ const formSchema = z
 
 type RegisterFormData = z.infer<typeof formSchema>;
 const Register = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
@@ -77,9 +80,23 @@ const Register = () => {
       })
       .then(function (response) {
         console.log('response', response.data);
+        toast.success('Register Success', {
+          description: `Your account has been successfully registered!`,
+          action: {
+            label: 'Great!',
+            onClick: () => navigate('/login'),
+          },
+        });
       })
       .catch(function (error) {
         console.log('error', error);
+        toast.error('Register Failed', {
+          description: `Oops something went wrong please try again!`,
+          action: {
+            label: 'Ok',
+            onClick: () => navigate('/'),
+          },
+        });
       })
       .finally(function () {
         setLoading(false);
