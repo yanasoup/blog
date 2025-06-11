@@ -3,15 +3,15 @@ import EditingNavigation from '../partials/editing-navigation';
 import { useCreatePost } from '@/hooks/useCreatePost';
 import type { CreatePostParams, UseCreatePostParams } from '@/models/post';
 import { AxiosError } from 'axios';
-const pageSize = import.meta.env.VITE_BLOG_PAGE_SIZE;
+
 import { useEffect } from 'react';
 import DebugBox from '@/redux/debug-box';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-
+import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import { PostEditor, EditorFormData } from '../partials/post-editor';
-
+const pageSize = import.meta.env.VITE_BLOG_PAGE_SIZE;
 const defaultPagingParam: UseCreatePostParams = {
   queryKey: [
     'posts',
@@ -23,7 +23,7 @@ const defaultPagingParam: UseCreatePostParams = {
 };
 
 const BlogPostCreate = () => {
-  // console.log('render');
+  const navigate = useNavigate();
   const uiuxState = useSelector((state: RootState) => state.uiux);
   const {
     // data,
@@ -38,6 +38,7 @@ const BlogPostCreate = () => {
       toast.success('Post Saved', {
         description: `your post has been successfully saved!`,
       });
+      navigate('/');
     } else if (error instanceof AxiosError) {
       toast.error('Failed!!', {
         description: `oops failed to save you post!`,

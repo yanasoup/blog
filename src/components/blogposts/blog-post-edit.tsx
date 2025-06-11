@@ -12,8 +12,9 @@ import { RootState } from '@/redux/store';
 import { toast } from 'sonner';
 import { UpdatePostParams, useUpdatePost } from '@/hooks/useUpdatePost';
 import { EditorFormData, PostEditor } from '../partials/post-editor';
-
+import { useNavigate } from 'react-router';
 const BlogPostEdit = () => {
+  const navigate = useNavigate();
   const match = useMatch('/edit-post/:postId');
   const uiuxState = useSelector((state: RootState) => state.uiux);
   const postId = match?.params.postId;
@@ -49,6 +50,7 @@ const BlogPostEdit = () => {
       toast.success('Post Updated', {
         description: `your post has been successfully updated!`,
       });
+      navigate('/');
     } else if (error instanceof AxiosError) {
       toast.error('Failed!!', {
         description: `oops failed to update you post!`,

@@ -173,12 +173,12 @@ export const PostEditor: React.FC<PostEditorProps> = ({
   return (
     <div className='custom-container mt-12 flex flex-wrap'>
       <div className='relative mx-auto flex w-212 pb-12'>
-        {isFetching ||
-          (isPending && (
-            <div className='flex-center absolute inset-0 top-0 left-0 z-5 rounded-lg bg-neutral-500 opacity-50'>
-              <BeatLoader color='#d5d7da' className='text-white' size={16} />
-            </div>
-          ))}
+        {(isFetching || isPending) && (
+          // ||isPending
+          <div className='flex-center absolute inset-0 top-0 left-0 z-5 rounded-lg bg-neutral-500 opacity-50'>
+            <BeatLoader color='#d5d7da' className='text-white' size={16} />
+          </div>
+        )}
         <Form {...form}>
           <form
             className='mx-auto max-w-200 flex-1 lg:min-w-180'
