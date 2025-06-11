@@ -7,6 +7,7 @@ import { formatDate } from '@/lib/utils';
 import { Icon } from '@iconify-icon/react';
 import { useGetUser } from '@/hooks/useAuth';
 import { toast } from 'sonner';
+import { BeatLoader } from 'react-spinners';
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
 type PostDetailProps = {
@@ -26,6 +27,7 @@ const PostDetail: React.FC<PostDetailProps> = ({
 }) => {
   const [isLiked, setIsLiked] = React.useState(isAlreadyLiked);
   const [totalLikes, setTotalLikes] = React.useState(post.likes);
+  const [isImagedLoaded, setIsImagedLoaded] = React.useState(false);
 
   const { data: articlleAuthor } = useGetUser(post.author.email);
 
@@ -111,9 +113,19 @@ const PostDetail: React.FC<PostDetailProps> = ({
           </div>
         </div>
         <div className='flex-center mt-4 h-auto w-full flex-1 basis-80 overflow-hidden'>
+          {post.imageUrl !== '' && !isImagedLoaded && (
+            <div className='flex h-full w-full flex-col items-center justify-center gap-2 text-neutral-200'>
+              <BeatLoader color='#ded6d6' />
+              <p className='text-xs-regular text-neutral-400'>
+                Loading image...
+              </p>
+            </div>
+          )}
+
           <img
-            className='flex-1 rounded-xl object-contain'
+            className='h-65 w-auto flex-1 rounded-xl object-contain'
             src={post.imageUrl}
+            onLoad={() => setIsImagedLoaded(true)}
           />
         </div>
         <div

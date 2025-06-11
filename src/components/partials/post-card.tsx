@@ -4,14 +4,18 @@ import { Icon } from '@iconify-icon/react';
 import { NavLink } from 'react-router';
 import type { Post } from '@/models/post';
 import { cn } from '@/lib/utils';
+import { BeatLoader } from 'react-spinners';
 type PostCardProps = Post & {
   updatePostHandler: (id: number) => void;
   isAlreadyLiked?: boolean;
   enabled?: boolean;
+  isFetching?: boolean;
 };
 export const PostCard: React.FC<PostCardProps> = ({ ...post }) => {
+  console.log('isFetching', post.isFetching);
   const [isLiked, setIsLiked] = React.useState(post.isAlreadyLiked);
   const [totalLikes, setTotalLikes] = React.useState(post.likes);
+  const [isImagedLoaded, setIsImagedLoaded] = React.useState(false);
 
   async function handleLike() {
     if (post.enabled) {
@@ -24,10 +28,20 @@ export const PostCard: React.FC<PostCardProps> = ({ ...post }) => {
   return (
     <div className='flex flex-col gap-6'>
       <div className='mt-6 flex flex-wrap gap-6'>
-        <div className='flex-center h-full w-full flex-1 basis-80 overflow-hidden'>
+        <div className='flex-center h-65 w-full flex-1 basis-80 overflow-hidden'>
+          {post.imageUrl !== '' && !isImagedLoaded && (
+            <div className='flex h-full w-full flex-col items-center justify-center gap-2 text-neutral-200'>
+              <BeatLoader color='#ded6d6' />
+              <p className='text-xs-regular text-neutral-400'>
+                Loading image...
+              </p>
+            </div>
+          )}
+
           <img
-            className='flex-1 rounded-xl object-contain'
+            className='h-65 w-auto flex-1 rounded-xl object-contain'
             src={post.imageUrl}
+            onLoad={() => setIsImagedLoaded(true)}
           />
         </div>
         <div className='flex-1 basis-80'>

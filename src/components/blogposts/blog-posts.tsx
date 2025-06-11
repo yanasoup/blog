@@ -100,6 +100,7 @@ const BlogPosts = () => {
             key={post.id}
             isAlreadyLiked={likedPost.includes(post.id)}
             enabled={uiuxState.isAuthenticated}
+            isFetching={isFetching}
           />
         ))}
 

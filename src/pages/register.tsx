@@ -89,7 +89,7 @@ const Register = () => {
   return (
     <div className='flex h-screen place-items-center justify-center'>
       <div className='w-90 rounded-xl border border-neutral-200 p-6 shadow-md shadow-neutral-300'>
-        <h2 className='text-xl font-bold text-neutral-900'>Sign In</h2>
+        <h2 className='text-xl font-bold text-neutral-900'>Register</h2>
 
         <Form {...form}>
           <form
