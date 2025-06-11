@@ -94,7 +94,7 @@ const SearchResult = () => {
         </div>
       )}
 
-      {totalData > 1 && (
+      {totalData > 0 && (
         <div className='relative flex-10 basis-80 justify-start border-b-4 border-neutral-300 p-4 lg:max-w-201 lg:border-b-0'>
           {!uiuxState.isAuthenticated && (
             <div className='absolute inset-0 top-0 left-0 z-5 bg-neutral-50 opacity-30' />
@@ -118,13 +118,14 @@ const SearchResult = () => {
               failed to fetch blog posts!
             </div>
           )}
-
-          <BlogPager
-            total={Posts?.total}
-            page={Posts?.page}
-            lastPage={Posts?.lastPage}
-            onPageChange={handlePageChange}
-          />
+          {totalData > pageSize && (
+            <BlogPager
+              total={Posts?.total}
+              page={Posts?.page}
+              lastPage={Posts?.lastPage}
+              onPageChange={handlePageChange}
+            />
+          )}
         </div>
       )}
 

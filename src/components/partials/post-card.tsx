@@ -12,7 +12,6 @@ type PostCardProps = Post & {
   isFetching?: boolean;
 };
 export const PostCard: React.FC<PostCardProps> = ({ ...post }) => {
-  console.log('isFetching', post.isFetching);
   const [isLiked, setIsLiked] = React.useState(post.isAlreadyLiked);
   const [totalLikes, setTotalLikes] = React.useState(post.likes);
   const [isImagedLoaded, setIsImagedLoaded] = React.useState(false);

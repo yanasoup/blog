@@ -100,6 +100,7 @@ const Register = () => {
       })
       .finally(function () {
         setLoading(false);
+        navigate('/login');
       });
   };
 
