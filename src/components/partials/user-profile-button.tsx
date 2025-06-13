@@ -88,6 +88,13 @@ export const UserDropdownMenu: React.FC<UserDropdownMenuProps> = ({
       <DropdownMenuContent className='w-56' align='start'>
         <DropdownMenuItem
           className='item-center text-sm-regular flex cursor-pointer justify-start'
+          onClick={() => navigate('/search')}
+        >
+          <Icon icon='iconamoon:search-bold' className='flex-center' />
+          Search
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          className='item-center text-sm-regular flex cursor-pointer justify-start'
           onClick={() => navigate('/myprofile')}
         >
           <Icon icon='ci:user-03' className='flex-center' />

@@ -140,7 +140,7 @@ const PostDetail: React.FC<PostDetailProps> = ({
         </div>
         <div
           dangerouslySetInnerHTML={{ __html: htmlContent }}
-          className='text-xs-regular md:text-sm-regular mt-4 text-neutral-900'
+          className='text-xs-regular md:text-sm-regular mt-4 overflow-hidden text-neutral-900'
         />
       </div>
     </div>

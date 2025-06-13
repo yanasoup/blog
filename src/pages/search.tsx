@@ -101,7 +101,8 @@ const SearchResult = () => {
           )}
 
           <h3 className='text-xl-bold md:display-sm-bold text-neutral-900'>
-            Result For "{q}"
+            Result For "<span className='border-b-4 border-[#57edd7]'>{q}</span>
+            "
           </h3>
           {Posts.data.map((post: Post) => (
             <PostCard

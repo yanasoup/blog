@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { BeatLoader } from 'react-spinners';
 import DOMPurify from 'dompurify';
 import { UserBadge } from './user-badge-occupation';
+
 type PostCardProps = Post & {
   updatePostHandler: (id: number) => void;
   isAlreadyLiked?: boolean;

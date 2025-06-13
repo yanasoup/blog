@@ -20,6 +20,9 @@ import PostComments from '@/components/blogposts/post-comments';
 import PostCommentsDialog from '@/components/blogposts/post-comments-dialog';
 import { NavLink } from 'react-router';
 import CommentLoggedUser from '@/components/partials/comment-logged-user';
+import { PostCard } from '@/components/partials/post-card';
+import { useGetRecommendedPosts } from '@/hooks/useGetPost';
+import { UseGetPostsParams } from '@/hooks/useGetPost';
 
 export const PostDetailPage: React.FC = () => {
   const [showAllComments, setShowAllComments] = React.useState(false);
@@ -28,6 +31,10 @@ export const PostDetailPage: React.FC = () => {
   const dispatch = useDispatch();
   const [likedPost, setLikedPost] = React.useState<number[]>(
     uiuxState.likedPosts
+  );
+  const [randomPage] = React.useState(
+    Math.floor(Math.random() * 10)
+    // 5
   );
 
   const match = useMatch('/post/:postId');
@@ -54,6 +61,28 @@ export const PostDetailPage: React.FC = () => {
     ...getCommentsResult,
     data: getCommentsResult.data?.slice(0, 3),
   };
+  async function handleUpdatePost(id: number) {
+    if (uiuxState.apiToken !== null) {
+      updatePostLikeFn({ id: id, authToken: uiuxState.apiToken! });
+      setLikedPost((prev) => [...prev, id]);
+      dispatch(addToLikedPost(id));
+    }
+  }
+
+  const defaultPagingParam = {
+    limit: 1,
+    page: randomPage,
+  };
+
+  // console.log('defaultPagingParam', defaultPagingParam);
+  const recommendedPostsParams: UseGetPostsParams = [
+    'recommended-posts',
+    defaultPagingParam,
+  ];
+
+  const { Posts: recommendedPosts, isFetching } = useGetRecommendedPosts(
+    recommendedPostsParams
+  );
 
   return (
     <>
@@ -119,6 +148,23 @@ export const PostDetailPage: React.FC = () => {
                     See All Comments
                   </NavLink>
                 </div>
+
+                {recommendedPosts &&
+                  recommendedPosts.data.map((post) => (
+                    <div className='mt-3 lg:mt-4' key={post.id}>
+                      <h3 className='display-xs-bold text-neutral-900'>
+                        Another Post
+                      </h3>
+                      <PostCard
+                        {...post}
+                        updatePostHandler={handleUpdatePost}
+                        key={post.id}
+                        isAlreadyLiked={likedPost.includes(post.id)}
+                        enabled={uiuxState.isAuthenticated}
+                        isFetching={isFetching}
+                      />
+                    </div>
+                  ))}
               </>
             )}
           </div>

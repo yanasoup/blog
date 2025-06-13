@@ -337,6 +337,29 @@ export const useSearchPosts = ([
     error,
   };
 };
+export const searchPosts2 = async (params: SearchPostParams) => {
+  const axiosRequestConfig: AxiosRequestConfig = {
+    params: { params },
+  };
+
+  const response = await customAxios.get<GetPostsResponse>(
+    '/posts/search',
+    axiosRequestConfig
+  );
+
+  return response.data;
+};
+
+type SearchPostParams = {
+  query: string;
+  page: number;
+  limit: number;
+};
+export const useSearchPosts2 = () => {
+  return useMutation({
+    mutationFn: (params: SearchPostParams) => searchPosts2(params),
+  });
+};
 
 export const getPostNoQKey = async (postId: string) => {
   const response = await customAxios.get<Post>(`/posts/${postId}`);
