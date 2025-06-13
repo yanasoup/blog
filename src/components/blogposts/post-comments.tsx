@@ -64,7 +64,7 @@ const PostComments: React.FC<PostCommentsProps> = ({ params, postId }) => {
     if (!postId) {
       return;
     }
-    // const formData = form.getValues();
+
     const tmpId = Math.floor(Math.random() * (1000000 - 200) + 200);
     setTmpCommentId(tmpId);
     const postData: PostCommentParams = {
@@ -163,30 +163,33 @@ const PostComments: React.FC<PostCommentsProps> = ({ params, postId }) => {
             >
               {/* {comment.id !== tmpCommentId && ( */}
               <div className='relative'>
-                {isPostComentLoading && comment.id === tmpCommentId && (
-                  <div className='absolute inset-0 flex h-full w-full flex-col items-center justify-center'>
-                    <BeatLoader color='#ded6d6' />
+                {/* {isPostComentLoading && comment.id === tmpCommentId && (
+                  <div className='absolute inset-0 flex h-full w-full flex-col items-center justify-center bg-neutral-100 opacity-60'>
                     <p className='text-xs-regular text-neutral-400'>
                       posting comments...
                     </p>
+                    <BeatLoader color='#414651' />
                   </div>
-                )}
+                )} */}
                 <div className='flex items-center justify-start gap-2'>
-                  {!isAvatarLoaded && (
-                    <div className='flex h-full w-full items-center justify-start text-neutral-200'>
-                      <BeatLoader color='#ded6d6' size={8} />
-                    </div>
-                  )}
-
-                  <img
-                    className='size-10 rounded-full object-contain'
-                    src={
-                      comment.author.avatarUrl
-                        ? `${apiBaseUrl}${comment?.author?.avatarUrl}`
-                        : 'https://placehold.co/40'
-                    }
-                    onLoad={() => setIsAvatarLoaded(true)}
-                  />
+                  <div className='relative size-10'>
+                    {!isAvatarLoaded && (
+                      <div className='absolute inset-0 z-2 flex h-full w-full items-center justify-start'>
+                        <BeatLoader color='#414651' size={8} />
+                      </div>
+                    )}
+                    <img
+                      className='h-full w-full rounded-full object-contain'
+                      src={
+                        comment.author.avatarUrl
+                          ? tmpCommentId === comment.id
+                            ? `${comment?.author?.avatarUrl}`
+                            : `${apiBaseUrl}${comment?.author?.avatarUrl}`
+                          : 'https://placehold.co/40'
+                      }
+                      onLoad={() => setIsAvatarLoaded(true)}
+                    />
+                  </div>
                   <div className='flex flex-col items-start justify-center'>
                     <span className='text-xs-medium md:text-sm-medium text-left text-neutral-900'>
                       {comment.author.name}

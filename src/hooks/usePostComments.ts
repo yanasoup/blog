@@ -2,6 +2,7 @@ import { customAxios } from '@/lib/customAxios';
 import type { MutationFunction } from '@tanstack/query-core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { Comment } from '@/models/post';
+import { wait } from './useGetPost';
 
 export const sendComment: MutationFunction<
   PostCommentParams,
@@ -39,6 +40,7 @@ export const sendCommentOptimistic: MutationFunction<
   PostCommentParams,
   PostCommentParams
 > = async (postComment: PostCommentParams) => {
+  await wait(500);
   const response = await customAxios.post<PostCommentParams>(
     `/comments/${postComment.postId}`,
     postComment.data,
@@ -62,7 +64,7 @@ export const useSendCommentOptimistic = (
     mutationFn: sendCommentOptimistic,
     onMutate: async (params: PostCommentParams) => {
       await queryClient.cancelQueries({ queryKey: params.queryKey });
-      let previousData = queryClient.getQueryData(params.queryKey);
+      const previousData = queryClient.getQueryData(params.queryKey);
       queryClient.setQueryData(params.queryKey, (oldData: Comment[]) => {
         if (oldData) {
           return [...oldData, params.optimisticData];
@@ -72,7 +74,6 @@ export const useSendCommentOptimistic = (
       return { previousData, queryKey: params.queryKey };
     },
     onError: (error, newData, context) => {
-      console.log('error', error);
       if (context) {
         queryClient.setQueryData(context.queryKey, context.previousData);
       } else {

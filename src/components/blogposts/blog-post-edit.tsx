@@ -50,7 +50,7 @@ const BlogPostEdit = () => {
       toast.success('Post Updated', {
         description: `your post has been successfully updated!`,
       });
-      navigate('/');
+      navigate('/myprofile');
     } else if (error instanceof AxiosError) {
       toast.error('Failed!!', {
         description: `oops failed to update you post!`,

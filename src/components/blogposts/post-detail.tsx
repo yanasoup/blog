@@ -28,6 +28,7 @@ const PostDetail: React.FC<PostDetailProps> = ({
   const [isLiked, setIsLiked] = React.useState(isAlreadyLiked);
   const [totalLikes, setTotalLikes] = React.useState(post.likes);
   const [isImagedLoaded, setIsImagedLoaded] = React.useState(false);
+  const [imageError, setImageError] = React.useState(false);
 
   const { data: articlleAuthor } = useGetUser(post.author.email);
 
@@ -123,9 +124,15 @@ const PostDetail: React.FC<PostDetailProps> = ({
           )}
 
           <img
-            className='h-65 w-auto flex-1 rounded-xl object-contain'
-            src={post.imageUrl}
+            // className='h-65 w-auto flex-1 rounded-xl object-cover'
+            className='min-h-64.5 flex-1 rounded-xl border-0 bg-neutral-300 object-cover md:h-auto md:w-85'
+            src={
+              imageError
+                ? `https://placehold.co/400x300?text=${post.title}`
+                : post.imageUrl
+            }
             onLoad={() => setIsImagedLoaded(true)}
+            onError={() => setImageError(true)}
           />
         </div>
         <div

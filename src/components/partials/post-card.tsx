@@ -5,6 +5,7 @@ import { NavLink } from 'react-router';
 import type { Post } from '@/models/post';
 import { cn } from '@/lib/utils';
 import { BeatLoader } from 'react-spinners';
+import DOMPurify from 'dompurify';
 type PostCardProps = Post & {
   updatePostHandler: (id: number) => void;
   isAlreadyLiked?: boolean;
@@ -15,6 +16,7 @@ export const PostCard: React.FC<PostCardProps> = ({ ...post }) => {
   const [isLiked, setIsLiked] = React.useState(post.isAlreadyLiked);
   const [totalLikes, setTotalLikes] = React.useState(post.likes);
   const [isImagedLoaded, setIsImagedLoaded] = React.useState(false);
+  const [imageError, setImageError] = React.useState(false);
 
   async function handleLike() {
     if (post.enabled) {
@@ -24,13 +26,14 @@ export const PostCard: React.FC<PostCardProps> = ({ ...post }) => {
     }
   }
 
+  const htmlContent = DOMPurify.sanitize(post.content);
   return (
     <div className='flex flex-col gap-6'>
       <div className='mt-6 flex flex-wrap gap-6'>
-        <div className='flex-center h-65 w-full flex-1 basis-80 overflow-hidden'>
+        <div className='relative min-h-64.5 flex-1 shrink-0 basis-80 items-center justify-center md:flex md:h-64.5 md:w-85 md:justify-start'>
           {post.imageUrl !== '' && !isImagedLoaded && (
-            <div className='flex h-full w-full flex-col items-center justify-center gap-2 text-neutral-200'>
-              <BeatLoader color='#ded6d6' />
+            <div className='absolute inset-0 flex h-64.5 w-85 flex-col items-center justify-center gap-2 text-neutral-200'>
+              <BeatLoader color='#222' />
               <p className='text-xs-regular text-neutral-400'>
                 Loading image...
               </p>
@@ -38,13 +41,18 @@ export const PostCard: React.FC<PostCardProps> = ({ ...post }) => {
           )}
 
           <img
-            className='h-65 w-auto flex-1 rounded-xl object-contain'
-            src={post.imageUrl}
+            className='min-h-64.5 flex-1 rounded-xl border-0 bg-neutral-300 object-cover md:h-64.5 md:w-85'
+            src={
+              imageError
+                ? `https://placehold.co/400x300?text=${post.title}`
+                : post.imageUrl
+            }
             onLoad={() => setIsImagedLoaded(true)}
+            onError={() => setImageError(true)}
           />
         </div>
         <div className='flex-1 basis-80'>
-          <h3 className='text-md-bold md:text-xl-bold text-neutral-900'>
+          <h3 className='text-md-bold md:text-xl-bold line-clamp-2 text-neutral-900'>
             <NavLink to={`/post/${post.id}`}>{post.title}</NavLink>
           </h3>
           <div className='mt-3 flex gap-2'>
@@ -57,8 +65,12 @@ export const PostCard: React.FC<PostCardProps> = ({ ...post }) => {
               </span>
             ))}
           </div>
-          <div className='text-xs-regular md:text-sm-regular mt-3 line-clamp-2 text-neutral-900'>
-            <div dangerouslySetInnerHTML={{ __html: post.content }} />
+          <div
+            className={cn(
+              'text-xs-regular md:text-sm-regular mt-3 line-clamp-2 text-neutral-900 max-lg:hidden'
+            )}
+          >
+            <p dangerouslySetInnerHTML={{ __html: htmlContent }}></p>
           </div>
           <div className='mt-3 flex items-center gap-3'>
             <div className='flex-center flex gap-2'>
@@ -112,14 +124,7 @@ export const PostCard: React.FC<PostCardProps> = ({ ...post }) => {
 export const PostCardLite: React.FC<PostCardProps> = ({ ...post }) => {
   const [isLiked] = React.useState(post.isAlreadyLiked);
   const [totalLikes] = React.useState(post.likes);
-
-  // async function handleLike() {
-  //   if (post.enabled) {
-  //     setIsLiked(!isLiked);
-  //     setTotalLikes(isLiked ? totalLikes - 1 : totalLikes + 1);
-  //     post.updatePostHandler(post.id);
-  //   }
-  // }
+  const htmlContent = DOMPurify.sanitize(post.content);
 
   return (
     <div className='mt-5 flex flex-col gap-5 first:mt-0'>
@@ -128,8 +133,11 @@ export const PostCardLite: React.FC<PostCardProps> = ({ ...post }) => {
           <h3 className='text-md-bold md:text-xl-bold text-neutral-900'>
             <NavLink to={`/post/${post.id}`}>{post.title}</NavLink>
           </h3>
-          <div className='text-xs-regular md:text-sm-regular mt-3 line-clamp-2 text-neutral-900'>
-            <span dangerouslySetInnerHTML={{ __html: post.content }} />
+          <div className='text-xs-regular md:text-sm-regular mt-3 line-clamp-2 flex-1 text-neutral-900'>
+            <span
+              className='w-full flex-1'
+              dangerouslySetInnerHTML={{ __html: htmlContent }}
+            />
           </div>
           <div className='mt-3 flex items-center gap-4'>
             <div className='like-count flex-center gap-1.5'>
@@ -137,7 +145,6 @@ export const PostCardLite: React.FC<PostCardProps> = ({ ...post }) => {
                 icon={isLiked ? 'streamline:like-1-solid' : 'streamline:like-1'}
                 size={20}
                 className='cursor-default text-neutral-600'
-                // onClick={handleLike}
               />
               <span className='text-xs-regular md:text-sm-regular text-neutral-600'>
                 {totalLikes}

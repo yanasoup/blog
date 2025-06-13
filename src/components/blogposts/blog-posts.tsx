@@ -80,7 +80,7 @@ const BlogPosts = () => {
   return (
     <div className='custom-container mt-12 flex flex-wrap'>
       <DebugBox visible={false} />
-      <div className='relative flex-10 basis-80 border-b-4 border-neutral-300 p-4 md:pr-12 lg:border-b-0'>
+      <div className='relative mx-auto flex-1 basis-213 xl:pr-12'>
         {!uiuxState.isAuthenticated && (
           <div className='absolute inset-0 top-0 left-0 z-5 bg-neutral-50 opacity-30' />
         )}
@@ -120,7 +120,7 @@ const BlogPosts = () => {
           />
         )}
       </div>
-      <div className='w-[345px] shrink-0 flex-grow p-4 text-neutral-800 md:border-l md:border-neutral-300 md:pl-12 lg:flex-grow-0'>
+      <div className='w-[345px] shrink-0 flex-grow basis-86 p-4 text-neutral-800 md:p-0 lg:flex-grow-0 lg:border-l lg:border-neutral-300 lg:pl-12'>
         <h3 className='display-xs-bold mb-5 text-neutral-900'>Most Liked</h3>
         {mostLikedPostsIsFetching && (
           <div className='flex-center mt-6 flex'>
