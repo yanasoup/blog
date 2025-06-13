@@ -26,13 +26,13 @@ export const PostCard: React.FC<PostCardProps> = ({ ...post }) => {
     }
   }
 
-  const htmlContent = DOMPurify.sanitize(post.content);
+  // const htmlContent = DOMPurify.sanitize(post.content);
   return (
     <div className='flex flex-col gap-6'>
       <div className='mt-6 flex flex-wrap gap-6'>
         <div className='relative min-h-64.5 flex-1 shrink-0 basis-80 items-center justify-center md:flex md:h-64.5 md:w-85 md:justify-start'>
           {post.imageUrl !== '' && !isImagedLoaded && (
-            <div className='absolute inset-0 flex h-64.5 w-85 flex-col items-center justify-center gap-2 text-neutral-200'>
+            <div className='absolute inset-0 flex h-64.5 w-auto flex-col items-center justify-center gap-0 text-neutral-200'>
               <BeatLoader color='#222' />
               <p className='text-xs-regular text-neutral-400'>
                 Loading image...
@@ -70,7 +70,7 @@ export const PostCard: React.FC<PostCardProps> = ({ ...post }) => {
               'text-xs-regular md:text-sm-regular mt-3 line-clamp-2 text-neutral-900 max-lg:hidden'
             )}
           >
-            <p dangerouslySetInnerHTML={{ __html: htmlContent }}></p>
+            {/* <p dangerouslySetInnerHTML={{ __html: htmlContent }}></p> */}
           </div>
           <div className='mt-3 flex items-center gap-3'>
             <div className='flex-center flex gap-2'>

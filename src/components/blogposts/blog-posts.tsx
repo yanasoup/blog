@@ -80,7 +80,7 @@ const BlogPosts = () => {
   return (
     <div className='custom-container mt-12 flex flex-wrap'>
       <DebugBox visible={false} />
-      <div className='relative mx-auto flex-1 basis-213 xl:pr-12'>
+      <div className='relative mx-auto flex-1 basis-213 xl:pr-12 xl:pb-12'>
         {!uiuxState.isAuthenticated && (
           <div className='absolute inset-0 top-0 left-0 z-5 bg-neutral-50 opacity-30' />
         )}
