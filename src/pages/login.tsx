@@ -165,7 +165,7 @@ const Login = () => {
                         className='focus:outline-none'
                         onClick={togglePasswordVisibility}
                       >
-                        {showPassword ? (
+                        {!showPassword ? (
                           <EyeOffIcon
                             className='h-5 w-5 text-gray-400'
                             aria-hidden='true'

@@ -16,6 +16,7 @@ import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { Icon } from '@iconify-icon/react';
+import { cn } from '@/lib/utils';
 import {
   Form,
   FormField,
@@ -29,28 +30,41 @@ import { UpdateProfileParams } from '@/hooks/useAuth';
 const MAX_FILE_SIZE = 1024 * 1024 * 5;
 const ACCEPTED_IMAGE_MIME_TYPES = ['image/jpeg', 'image/jpg', 'image/png'];
 
-const formSchema = z.object({
-  name: z
-    .string({
-      invalid_type_error: 'Please enter your name',
-    })
-    .min(1, 'Please enter your name'),
-  profileHeadline: z
-    .string({
-      required_error: 'Please enter your headline',
-    })
-    .min(1, 'Please enter your password')
-    .max(255, 'invalid password'),
-  image: z
-    .any()
-    .refine((files) => {
-      return files?.[0]?.size <= MAX_FILE_SIZE;
-    }, `Max image size is 5MB.`)
-    .refine(
-      (files) => ACCEPTED_IMAGE_MIME_TYPES.includes(files?.[0]?.type),
-      'Only .jpg, .jpeg, and .png formats are supported.'
-    ),
-});
+const formSchema = z
+  .object({
+    name: z
+      .string({
+        invalid_type_error: 'Please enter your name',
+      })
+      .min(1, 'Please enter your name'),
+    profileHeadline: z
+      .string({
+        required_error: 'Please enter your headline',
+      })
+      .min(1, 'Please enter your headline')
+      .max(50, 'headline is too long (max 50 characters)'),
+    imageUrl: z.string().optional(),
+    image: z
+      .any()
+      .optional()
+      .refine((files: FileList | undefined) => {
+        if (!files || files.length === 0) return true;
+        return files[0].size <= MAX_FILE_SIZE;
+      }, `Max image size is 5MB.`)
+      .refine((files: FileList | undefined) => {
+        if (!files || files.length === 0) return true;
+        return ACCEPTED_IMAGE_MIME_TYPES.includes(files[0].type);
+      }, 'Only .jpg, .jpeg, and .png formats are supported.'),
+  })
+  .refine(
+    (data) => {
+      return !!data.imageUrl || (!!data.image && data.image.length > 0);
+    },
+    {
+      message: 'Cover image can not be empty',
+      path: ['image'],
+    }
+  );
 
 type FormData = z.infer<typeof formSchema>;
 interface DialogProps extends React.ComponentProps<typeof Dialog> {
@@ -65,12 +79,15 @@ const EditProfileDialog: React.FC<DialogProps> = ({
 }) => {
   const uiuxState = useSelector((state: RootState) => state.uiux);
   const [selectedImage, setSelectedImage] = React.useState<File | null>(null);
+  const [imageUrl, setImageUrl] = React.useState<string | null>(null);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
       profileHeadline: '',
+      imageUrl: '',
+      image: null,
     },
   });
 
@@ -87,7 +104,13 @@ const EditProfileDialog: React.FC<DialogProps> = ({
   React.useEffect(() => {
     form.setValue('name', uiuxState.authUser?.name!);
     form.setValue('profileHeadline', uiuxState.authUser?.headline!);
-  }, [uiuxState.authUser?.name, uiuxState.authUser?.headline]);
+    form.setValue('imageUrl', uiuxState.authUser?.avatarUrl || '');
+    setImageUrl(uiuxState.authUser?.avatarUrl || '');
+  }, [
+    uiuxState.authUser?.name,
+    uiuxState.authUser?.headline,
+    uiuxState.authUser?.avatarUrl,
+  ]);
 
   return (
     <Dialog {...props}>
@@ -143,9 +166,7 @@ const EditProfileDialog: React.FC<DialogProps> = ({
                           {!selectedImage && (
                             <img
                               src={
-                                uiuxState.authUser?.avatarUrl
-                                  ? uiuxState.authUser?.avatarUrl
-                                  : 'https://placehold.co/80'
+                                imageUrl ? imageUrl : 'https://placehold.co/80'
                               }
                               alt='avatar'
                               className='size-20 max-h-20 max-w-20 overflow-clip rounded-full object-contain'
@@ -163,7 +184,6 @@ const EditProfileDialog: React.FC<DialogProps> = ({
                           </label>
                         </div>
                       </FormControl>
-
                       <FormMessage />
                     </FormItem>
                   )}
@@ -179,7 +199,10 @@ const EditProfileDialog: React.FC<DialogProps> = ({
                       </FormLabel>
                       <Input
                         {...field}
-                        className='text-sm-regular'
+                        className={cn(
+                          'text-sm-regular',
+                          form.formState.errors?.name ? 'border-[#EE1D52]' : ''
+                        )}
                         placeholder='Enter your name'
                         disabled={showLoader}
                         type='text'

@@ -50,6 +50,11 @@ export const PostDetailPage: React.FC = () => {
     dispatch(addToLikedPost(id));
   }
 
+  const getCommentsResultLimited = {
+    ...getCommentsResult,
+    data: getCommentsResult.data?.slice(0, 3),
+  };
+
   return (
     <>
       <DebugBox visible={false} />
@@ -101,7 +106,7 @@ export const PostDetailPage: React.FC = () => {
             {!getCommentsResult.isLoading && getCommentsResult.data && (
               <>
                 <PostComments
-                  params={getCommentsResult}
+                  params={getCommentsResultLimited}
                   postId={match?.params.postId}
                 />
 

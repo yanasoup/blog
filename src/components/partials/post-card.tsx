@@ -6,6 +6,7 @@ import type { Post } from '@/models/post';
 import { cn } from '@/lib/utils';
 import { BeatLoader } from 'react-spinners';
 import DOMPurify from 'dompurify';
+import { UserBadge } from './user-badge-occupation';
 type PostCardProps = Post & {
   updatePostHandler: (id: number) => void;
   isAlreadyLiked?: boolean;
@@ -74,10 +75,7 @@ export const PostCard: React.FC<PostCardProps> = ({ ...post }) => {
           </div>
           <div className='mt-3 flex items-center gap-3'>
             <div className='flex-center flex gap-2'>
-              <img
-                className='size-10 rounded-full object-contain'
-                src='https://placehold.co/40'
-              />
+              <UserBadge avatarUrl={post.author.avatarUrl || ''} size={10} />
               <span className='text-xs-medium md:text-sm-medium text-neutral-900'>
                 {post.author.name}
               </span>

@@ -93,7 +93,7 @@ const UpdatePasswordForm: React.FC<FormProps> = ({ onSubmit, isLoading }) => {
                         togglePasswordVisibility('currentPassword')
                       }
                     >
-                      {showPassword ? (
+                      {!showPassword ? (
                         <EyeOffIcon
                           className='h-5 w-5 text-gray-400'
                           aria-hidden='true'
@@ -132,7 +132,7 @@ const UpdatePasswordForm: React.FC<FormProps> = ({ onSubmit, isLoading }) => {
                       className='focus:outline-none'
                       onClick={() => togglePasswordVisibility('new_password')}
                     >
-                      {showNewPassword ? (
+                      {!showNewPassword ? (
                         <EyeOffIcon
                           className='h-5 w-5 text-gray-400'
                           aria-hidden='true'
@@ -174,7 +174,7 @@ const UpdatePasswordForm: React.FC<FormProps> = ({ onSubmit, isLoading }) => {
                         togglePasswordVisibility('new_password_confirm')
                       }
                     >
-                      {showNewPasswordConfirm ? (
+                      {!showNewPasswordConfirm ? (
                         <EyeOffIcon
                           className='h-5 w-5 text-gray-400'
                           aria-hidden='true'

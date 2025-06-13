@@ -193,12 +193,9 @@ export const MyProfilelPage: React.FC = () => {
         <div className='flex items-center justify-between rounded-xl border border-neutral-300 px-4 py-3 lg:px-6 lg:py-4'>
           <UserBadgeOccupation
             name={uiuxState.authUser?.name || 'Guest'}
-            avatarUrl={
-              uiuxState.authUser?.avatarUrl
-                ? uiuxState.authUser?.avatarUrl
-                : 'https://placehold.co/50'
-            }
+            avatarUrl={uiuxState.authUser?.avatarUrl || ''}
             occupation={uiuxState.authUser?.headline || 'Frontend Developer'}
+            size={12.5}
           />
           <NavLink
             to='#'
@@ -309,12 +306,6 @@ const PostCard: React.FC<PostCardProps> = ({
   return (
     <div className='flex flex-col gap-5'>
       <div className='mt-5 flex flex-wrap gap-6'>
-        <div className='flex-center h-full w-full flex-1 basis-80 overflow-hidden'>
-          <img
-            className='flex-1 rounded-xl object-contain'
-            src={post.imageUrl}
-          />
-        </div>
         <div className='flex-1 basis-80'>
           <h3 className='text-md-bold md:text-xl-bold text-neutral-900'>
             <NavLink to={`/post/${post.id}`}>{post.title}</NavLink>

@@ -8,6 +8,8 @@ import { Icon } from '@iconify-icon/react';
 import { useGetUser } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { BeatLoader } from 'react-spinners';
+import DOMPurify from 'dompurify';
+import { UserBadge } from '../partials/user-badge-occupation';
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
 type PostDetailProps = {
@@ -31,6 +33,7 @@ const PostDetail: React.FC<PostDetailProps> = ({
   const [imageError, setImageError] = React.useState(false);
 
   const { data: articlleAuthor } = useGetUser(post.author.email);
+  const htmlContent = DOMPurify.sanitize(post.content);
 
   async function handleLike() {
     if (isEnabled) {
@@ -68,13 +71,13 @@ const PostDetail: React.FC<PostDetailProps> = ({
         </div>
         <div className='flex items-center gap-3 border-b border-neutral-300 py-4'>
           <div className='flex-center flex gap-2'>
-            <img
-              className='size-10 rounded-full object-contain'
-              src={
+            <UserBadge
+              avatarUrl={
                 articlleAuthor?.avatarUrl
                   ? `${apiBaseUrl}${articlleAuthor?.avatarUrl}`
-                  : 'https://placehold.co/40'
+                  : ''
               }
+              size={10}
             />
             <span className='text-xs-medium md:text-sm-medium text-neutral-900'>
               {post.author.name}
@@ -136,7 +139,7 @@ const PostDetail: React.FC<PostDetailProps> = ({
           />
         </div>
         <div
-          dangerouslySetInnerHTML={{ __html: post.content }}
+          dangerouslySetInnerHTML={{ __html: htmlContent }}
           className='text-xs-regular md:text-sm-regular mt-4 text-neutral-900'
         />
       </div>

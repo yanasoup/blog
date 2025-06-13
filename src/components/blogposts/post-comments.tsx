@@ -25,6 +25,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { UserBadge } from '../partials/user-badge-occupation';
 
 const formSchema = z.object({
   comment: z
@@ -40,7 +41,6 @@ type PostCommentsProps = {
   params: UseGetCommentsReturn;
 };
 const PostComments: React.FC<PostCommentsProps> = ({ params, postId }) => {
-  const [isAvatarLoaded, setIsAvatarLoaded] = React.useState(false);
   const [tmpCommentId, setTmpCommentId] = React.useState(0);
   const useCommentParams: UseSendCommentParams = {
     queryKey: ['post-comments', postId!],
@@ -172,24 +172,17 @@ const PostComments: React.FC<PostCommentsProps> = ({ params, postId }) => {
                   </div>
                 )} */}
                 <div className='flex items-center justify-start gap-2'>
-                  <div className='relative size-10'>
-                    {!isAvatarLoaded && (
-                      <div className='absolute inset-0 z-2 flex h-full w-full items-center justify-start'>
-                        <BeatLoader color='#414651' size={8} />
-                      </div>
-                    )}
-                    <img
-                      className='h-full w-full rounded-full object-contain'
-                      src={
-                        comment.author.avatarUrl
-                          ? tmpCommentId === comment.id
-                            ? `${comment?.author?.avatarUrl}`
-                            : `${apiBaseUrl}${comment?.author?.avatarUrl}`
-                          : 'https://placehold.co/40'
-                      }
-                      onLoad={() => setIsAvatarLoaded(true)}
-                    />
-                  </div>
+                  <UserBadge
+                    avatarUrl={
+                      comment.author.avatarUrl
+                        ? tmpCommentId === comment.id
+                          ? `${comment?.author?.avatarUrl}`
+                          : `${apiBaseUrl}${comment?.author?.avatarUrl}`
+                        : ''
+                    }
+                    size={10}
+                  />
+                  {/* </div> */}
                   <div className='flex flex-col items-start justify-center'>
                     <span className='text-xs-medium md:text-sm-medium text-left text-neutral-900'>
                       {comment.author.name}

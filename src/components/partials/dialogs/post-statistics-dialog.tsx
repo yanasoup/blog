@@ -18,7 +18,9 @@ import {
   UseGetPostParams,
   useGetLikes,
 } from '@/hooks/useGetPost';
-import UserBadgeOccupation from '@/components/partials/user-badge-occupation';
+import UserBadgeOccupation, {
+  UserBadge,
+} from '@/components/partials/user-badge-occupation';
 import { BlogUser, Comment } from '@/models/post';
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -130,7 +132,7 @@ const PostStatisticDialog: React.FC<DialogProps> = ({
                           avatarUrl={
                             user.avatarUrl
                               ? `${apiBaseUrl}${user.avatarUrl}`
-                              : 'https://placehold.co/50'
+                              : ''
                           }
                           occupation={
                             user.headline ? user.headline : 'Frontend Developer'
@@ -138,6 +140,7 @@ const PostStatisticDialog: React.FC<DialogProps> = ({
                           avatarUrlClassName='size-12'
                           nameClassName='text-xs-semibold lg:text-sm-semibold text-neutral-900'
                           occupationClassName='text-xs-regular lg:text-sm-regular text-neutral-600'
+                          size={12.5}
                         />
                       </div>
                     ))}
@@ -169,13 +172,13 @@ const PostStatisticDialog: React.FC<DialogProps> = ({
                         className='w-full border-b border-neutral-300 pb-3'
                       >
                         <div className='flex items-center gap-2'>
-                          <img
-                            src={
+                          <UserBadge
+                            size={12}
+                            avatarUrl={
                               comment.author.avatarUrl
                                 ? `${apiBaseUrl}${comment?.author?.avatarUrl}`
-                                : 'https://placehold.co/48'
+                                : ''
                             }
-                            className='size-12 rounded-full'
                           />
                           <div className='flex flex-col'>
                             <span className='text-xs-semibold lg:text-sm-semibold text-neutral-900'>

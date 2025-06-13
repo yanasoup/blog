@@ -186,7 +186,7 @@ const Register = () => {
                         className='focus:outline-none'
                         onClick={() => togglePasswordVisibility('password')}
                       >
-                        {showPassword ? (
+                        {!showPassword ? (
                           <EyeOffIcon
                             className='h-5 w-5 text-gray-400'
                             aria-hidden='true'
@@ -231,7 +231,7 @@ const Register = () => {
                           togglePasswordVisibility('confirm_password')
                         }
                       >
-                        {showPasswordConfirm ? (
+                        {!showPasswordConfirm ? (
                           <EyeOffIcon
                             className='h-5 w-5 text-gray-400'
                             aria-hidden='true'
