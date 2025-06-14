@@ -116,9 +116,14 @@ const PostDetail: React.FC<PostDetailProps> = ({
             </span>
           </div>
         </div>
-        <div className='flex-center mt-4 h-auto w-full flex-1 basis-80 overflow-hidden'>
+        <div className={cn('flex-center relative mt-4 overflow-hidden')}>
           {post.imageUrl !== '' && !isImagedLoaded && (
-            <div className='flex h-full w-full flex-col items-center justify-center gap-2 text-neutral-200'>
+            <div
+              className={cn(
+                'flex flex-col items-center justify-center gap-2 text-neutral-200',
+                'absolute inset-0 z-5'
+              )}
+            >
               <BeatLoader color='#ded6d6' />
               <p className='text-xs-regular text-neutral-400'>
                 Loading image...
@@ -127,8 +132,7 @@ const PostDetail: React.FC<PostDetailProps> = ({
           )}
 
           <img
-            // className='h-65 w-auto flex-1 rounded-xl object-cover'
-            className='min-h-64.5 flex-1 rounded-xl border-0 bg-neutral-300 object-cover md:h-auto md:w-85'
+            className={cn('rounded-xl border-0 object-contain')}
             src={
               imageError
                 ? `https://placehold.co/400x300?text=${post.title}`
@@ -136,8 +140,15 @@ const PostDetail: React.FC<PostDetailProps> = ({
             }
             onLoad={() => setIsImagedLoaded(true)}
             onError={() => setImageError(true)}
+            style={
+              {
+                // width: 'clamp(20rem,40vw,40rem)',
+                // height: 'clamp(12.69rem, 30vw, 30rem)',
+              }
+            }
           />
         </div>
+
         <div
           dangerouslySetInnerHTML={{ __html: htmlContent }}
           className='text-xs-regular md:text-sm-regular mt-4 overflow-hidden text-neutral-900'

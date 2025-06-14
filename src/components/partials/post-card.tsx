@@ -13,8 +13,12 @@ type PostCardProps = Post & {
   isAlreadyLiked?: boolean;
   enabled?: boolean;
   isFetching?: boolean;
+  showImageCover?: boolean;
 };
-export const PostCard: React.FC<PostCardProps> = ({ ...post }) => {
+export const PostCard: React.FC<PostCardProps> = ({
+  showImageCover = true,
+  ...post
+}) => {
   const [isLiked, setIsLiked] = React.useState(post.isAlreadyLiked);
   const [totalLikes, setTotalLikes] = React.useState(post.likes);
   const [isImagedLoaded, setIsImagedLoaded] = React.useState(false);
@@ -28,32 +32,61 @@ export const PostCard: React.FC<PostCardProps> = ({ ...post }) => {
     }
   }
 
-  // const htmlContent = DOMPurify.sanitize(post.content);
+  const htmlContent = DOMPurify.sanitize(post.content);
   return (
     <div className='flex flex-col gap-6'>
       <div className='mt-6 flex flex-wrap gap-6'>
-        <div className='relative min-h-64.5 flex-1 shrink-0 basis-80 items-center justify-center md:flex md:h-64.5 md:w-85 md:justify-start'>
+        <div
+          className={cn(
+            // 'relative flex shrink-0 basis-80 items-center justify-center lg:flex lg:justify-start',
+            'relative max-lg:flex-1',
+            `${!showImageCover ? 'hidden' : ''}`
+          )}
+        >
           {post.imageUrl !== '' && !isImagedLoaded && (
             <div className='absolute inset-0 flex h-64.5 w-auto flex-col items-center justify-center gap-0 text-neutral-200'>
-              <BeatLoader color='#222' />
+              <BeatLoader color='#ded6d6' />
               <p className='text-xs-regular text-neutral-400'>
                 Loading image...
               </p>
             </div>
           )}
-
-          <img
-            className='min-h-64.5 flex-1 rounded-xl border-0 bg-neutral-300 object-cover md:h-64.5 md:w-85'
-            src={
-              imageError
-                ? `https://placehold.co/400x300?text=${post.title}`
-                : post.imageUrl
-            }
-            onLoad={() => setIsImagedLoaded(true)}
-            onError={() => setImageError(true)}
-          />
+          <NavLink
+            to={`/post/${post.id}`}
+            className={cn(
+              'relative flex shrink-0 basis-80 items-center justify-center lg:flex lg:justify-start',
+              'max-lg:flex-1'
+            )}
+          >
+            <img
+              className={cn(
+                'rounded-xl border-0 object-cover',
+                'max-w-21.215rem w-[27.24vw] min-w-[20rem]',
+                'max-h-16.13rem h-[20.67vw] min-h-[12.69rem]',
+                'md:min-h-64.5 md:min-w-85',
+                'max-lg:flex-1'
+              )}
+              src={
+                imageError
+                  ? `https://placehold.co/400x300?text=${post.title}`
+                  : post.imageUrl
+              }
+              onLoad={() => setIsImagedLoaded(true)}
+              onError={() => setImageError(true)}
+              style={{
+                width: 'clamp(20rem,27.24vw,21.215rem)',
+                height: 'clamp(12.69rem, 20.67vw, 16.13rem)',
+              }}
+            />
+          </NavLink>
         </div>
-        <div className='flex-1 basis-80'>
+        <div
+          className={cn('basis-109 overflow-hidden')}
+          style={{
+            width: 'clamp(20rem, 34.94vw, 27.25rem)',
+            // height: 'clamp(12.69rem, 20.67vw, 16.13rem)',
+          }}
+        >
           <h3 className='text-md-bold md:text-xl-bold line-clamp-2 text-neutral-900'>
             <NavLink to={`/post/${post.id}`}>{post.title}</NavLink>
           </h3>
@@ -67,12 +100,11 @@ export const PostCard: React.FC<PostCardProps> = ({ ...post }) => {
               </span>
             ))}
           </div>
-          <div
-            className={cn(
-              'text-xs-regular md:text-sm-regular mt-3 line-clamp-2 text-neutral-900 max-lg:hidden'
-            )}
-          >
-            {/* <p dangerouslySetInnerHTML={{ __html: htmlContent }}></p> */}
+          <div className='mt-3'>
+            <p
+              dangerouslySetInnerHTML={{ __html: htmlContent }}
+              className='text-xs-regular md:text-sm-regular line-clamp-2 overflow-hidden text-neutral-900'
+            />
           </div>
           <div className='mt-3 flex items-center gap-3'>
             <div className='flex-center flex gap-2'>

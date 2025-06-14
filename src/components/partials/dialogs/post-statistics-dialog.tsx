@@ -150,7 +150,7 @@ const PostStatisticDialog: React.FC<DialogProps> = ({
                   value='comment'
                   className='max-h-[50vh] overflow-y-auto'
                 >
-                  <div className='flex flex-col items-start justify-between gap-5 overflow-y-auto pt-3'>
+                  <div className='flex flex-col items-start justify-between gap-5 overflow-x-hidden overflow-y-auto pt-3'>
                     <div className='text-sm-bold lg:text-lg-bold mt-6 text-neutral-950'>
                       Comment ({totalComments === 0 ? 0 : totalComments})
                     </div>

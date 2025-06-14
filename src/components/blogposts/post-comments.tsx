@@ -113,7 +113,7 @@ const PostComments: React.FC<PostCommentsProps> = ({ params, postId }) => {
       {uiuxState.isAuthenticated && (
         <Form {...form}>
           <form
-            className='mx-auto max-w-180 space-y-4 md:space-y-6'
+            className='space-y-4 md:space-y-6'
             onSubmit={form.handleSubmit(handlePostComment)}
           >
             <FormField
@@ -192,7 +192,7 @@ const PostComments: React.FC<PostCommentsProps> = ({ params, postId }) => {
                     </span>
                   </div>
                 </div>
-                <p className='text-xs-regular md:text-sm-regular text-left text-neutral-900'>
+                <p className='text-xs-regular md:text-sm-regular overflow-x-hidden overflow-y-scroll text-left text-neutral-900'>
                   {comment.content}
                 </p>
               </div>

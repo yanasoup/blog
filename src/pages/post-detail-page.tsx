@@ -88,7 +88,7 @@ export const PostDetailPage: React.FC = () => {
     <>
       <DebugBox visible={false} />
 
-      <div className={cn('custom-container max-w-[50rem]')}>
+      <div className={cn('custom-container max-w-[53rem] overflow-hidden')}>
         {getPostResult.isLoading && (
           <div className='flex-center mt-6 flex h-[40vh] flex-col'>
             <p className='text-xs-regular text-neutral-500'>
@@ -162,6 +162,7 @@ export const PostDetailPage: React.FC = () => {
                         isAlreadyLiked={likedPost.includes(post.id)}
                         enabled={uiuxState.isAuthenticated}
                         isFetching={isFetching}
+                        showImageCover={false}
                       />
                     </div>
                   ))}

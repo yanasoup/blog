@@ -34,7 +34,7 @@ const PostCommentsDialog: React.FC<FormStatusDialogProps> = ({
     <Dialog {...props}>
       <DialogContent>
         <DialogBody
-          className='mx-auto overflow-scroll px-4 py-6 md:px-6 md:py-6'
+          className='mx-auto overflow-x-hidden overflow-y-scroll px-4 py-6 md:px-6 md:py-6'
           style={{
             width: 'clamp(21.56rem, 49.12vw, 38.31rem)',
             height: 'clamp(41.13rem, 72.28vw, 56.38rem)',
