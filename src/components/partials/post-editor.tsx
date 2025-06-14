@@ -424,7 +424,7 @@ export const PostEditor: React.FC<PostEditorProps> = ({
               <Button
                 disabled={isPending}
                 type='submit'
-                className='w-fit px-28.5'
+                className='w-full px-28.5 md:w-fit'
               >
                 {isPending ? (
                   <BeatLoader

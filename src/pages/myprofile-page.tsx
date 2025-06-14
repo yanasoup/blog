@@ -213,18 +213,23 @@ export const MyProfilelPage: React.FC = () => {
               <TabsTrigger value='password'>Change Password</TabsTrigger>
             </TabsList>
             <TabsContent value='post' className='py-5'>
-              <div className='flex items-center justify-between border-b border-neutral-300 pb-5'>
-                <span>({posts.total}) Post</span>
+              <div className='flex flex-col-reverse items-center justify-center border-b border-neutral-300 pb-5 md:flex-row md:justify-between'>
+                <span className='text-lg-bold md:display-xs-bold hidden md:block'>
+                  ({posts.total}) Post
+                </span>
                 <NavLink
                   to='/write-post'
-                  className='bg-primary-300 text-xs-semibold lg:text-sm-semibold flex-center h-11 gap-2 rounded-full px-11 py-3'
+                  className='bg-primary-300 text-xs-semibold lg:text-sm-semibold flex-center h-11 w-full gap-2 rounded-full px-11 py-3 md:w-fit'
                 >
                   <PenLineIcon className='size-6 text-white' />
-                  <span className='text-xs-semibold lg:text-sm-semibold text-white'>
+                  <span className='text-xs-semibold md:text-sm-semibold w-fit text-white md:w-full'>
                     Write Post
                   </span>
                 </NavLink>
               </div>
+              <span className='text-lg-bold md:display-xs-bold mt-4 block md:hidden'>
+                ({posts.total}) Post
+              </span>
               {isFetching && (
                 <div className='flex-center mt-5 flex'>
                   <BeatLoader
