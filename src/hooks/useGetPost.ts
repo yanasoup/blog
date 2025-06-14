@@ -294,17 +294,9 @@ export type UseSearchPostsParams = [
   string,
   { limit: number; page: number },
 ];
-export const searchPosts: QueryFunction<
-  GetPostsResponse,
-  UseSearchPostsParams
-> = async ({ queryKey, signal }) => {
+export const searchPosts = async (params: SearchPostParams) => {
   const axiosRequestConfig: AxiosRequestConfig = {
-    signal,
-    params: {
-      query: queryKey[1],
-      page: queryKey[2].page,
-      limit: queryKey[2].limit,
-    },
+    params: params,
   };
 
   const response = await customAxios.get<GetPostsResponse>(
@@ -315,50 +307,25 @@ export const searchPosts: QueryFunction<
   return response.data;
 };
 
-export const useSearchPosts = ([
-  qkey,
-  searchQuery,
-  { limit = pageSize, page = 1 },
-]: UseSearchPostsParams): UseGetPostsReturn => {
-  const { data, isLoading, isFetching, error } = useQuery({
-    queryKey: [qkey, searchQuery, { limit: limit, page: page }],
-    queryFn: searchPosts,
-    enabled: !!searchQuery,
-  });
-
-  const recommendedPosts = data ?? emptyPostResponse;
-  const totalData = data?.total ?? 0;
-
-  return {
-    Posts: recommendedPosts,
-    totalData,
-    isLoading,
-    isFetching,
-    error,
-  };
-};
-export const searchPosts2 = async (params: SearchPostParams) => {
-  const axiosRequestConfig: AxiosRequestConfig = {
-    params: { params },
-  };
-
-  const response = await customAxios.get<GetPostsResponse>(
-    '/posts/search',
-    axiosRequestConfig
-  );
-
-  return response.data;
-};
-
-type SearchPostParams = {
+export type SearchPostParams = {
   query: string;
   page: number;
   limit: number;
 };
-export const useSearchPosts2 = () => {
-  return useMutation({
-    mutationFn: (params: SearchPostParams) => searchPosts2(params),
+export const useSearchPosts = () => {
+  const { mutate, data, isPending, error } = useMutation({
+    mutationFn: (params: SearchPostParams) => searchPosts(params),
   });
+  const post = data ?? undefined;
+  const totalData = data ? data.total : 0;
+
+  return {
+    mutate,
+    post,
+    totalData,
+    isFetching: isPending,
+    error,
+  };
 };
 
 export const getPostNoQKey = async (postId: string) => {

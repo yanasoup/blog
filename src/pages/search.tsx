@@ -1,8 +1,8 @@
 import type { Post } from '@/models/post';
-import { useSearchPosts, UseSearchPostsParams } from '@/hooks/useGetPost';
+import { useSearchPosts, SearchPostParams } from '@/hooks/useGetPost';
 import { BeatLoader } from 'react-spinners';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useUpdatePostLike } from '@/hooks/useUpdatePost';
 import { PostCard } from '@/components/partials/post-card';
 const pageSize = import.meta.env.VITE_BLOG_PAGE_SIZE;
@@ -10,51 +10,52 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 
 import DebugBox from '@/redux/debug-box';
-import { addToLikedPost } from '@/redux/ui-slice';
+import { addToLikedPost, setSearchTerm } from '@/redux/ui-slice';
 import { useDispatch } from 'react-redux';
 
 import { BlogPager } from '@/components/blogposts/blog-posts';
 
-import { NavLink, useSearchParams } from 'react-router';
 import IconDoc from '@/assets/icons/icon-empyt-document.svg';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { SearchInput } from '@/components/ui/search-input';
 import { useNavigate } from 'react-router';
+import { cn } from '@/lib/utils';
+import { useMatch, NavLink } from 'react-router';
 
 const SearchResult = () => {
-  const [searchParams] = useSearchParams();
-  const q = searchParams.get('q');
-  const [query, setQuery] = React.useState('');
+  const match = useMatch('/search/:searchTerm');
+  const q = match?.params.searchTerm;
+
   const fsearch = React.useRef<HTMLFormElement>(null);
   const navigate = useNavigate();
+  const currentSearchTerm = useSelector(
+    (state: RootState) => state.uiux.currentSearchTerm
+  );
 
   const [likedPost, setLikedPost] = React.useState<number[]>([]);
   const dispatch = useDispatch();
   const [postsCurrentPage, setPostsCurrentPage] = useState(1);
-  const defaultPagingParam = {
-    limit: pageSize,
-    page: postsCurrentPage,
-  };
-  const searchPostsParams: UseSearchPostsParams = [
-    `search-posts`,
-    `${q}`,
-    defaultPagingParam,
-  ];
-  const { Posts, totalData, error, isFetching } =
-    useSearchPosts(searchPostsParams);
+
+  const {
+    post,
+    isFetching,
+    mutate: searchPostFn,
+    totalData,
+    error,
+  } = useSearchPosts();
 
   const uiuxState = useSelector((state: RootState) => state.uiux);
   const { mutate: updatePostLikeFn } = useUpdatePostLike();
 
   function handleSearchIputChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setQuery(e.target.value);
+    dispatch(setSearchTerm(e.target.value));
   }
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const q = query.trim();
+    const q = currentSearchTerm.trim();
     fsearch.current?.reset();
-    navigate(`/search?q=${encodeURIComponent(q)}`);
+    navigate(`/search/${encodeURIComponent(q)}`);
   }
 
   async function handleUpdatePost(id: number) {
@@ -69,6 +70,19 @@ const SearchResult = () => {
     setPostsCurrentPage(page);
   }
 
+  useEffect(() => {
+    dispatch(setSearchTerm(q || ''));
+    if (q) {
+      const searchPostsParams2: SearchPostParams = {
+        query: q,
+        limit: pageSize,
+        page: postsCurrentPage,
+      };
+
+      searchPostFn(searchPostsParams2);
+    }
+  }, [q]);
+
   return (
     <div className='custom-container relative mt-4 flex flex-wrap'>
       <DebugBox visible={false} />
@@ -78,12 +92,9 @@ const SearchResult = () => {
           onSubmit={handleSubmit}
           className='item-center flex flex-1 lg:hidden'
         >
-          <Input
-            className='text-sm-regular w-full flex-1'
-            placeholder='Search'
-            type='text'
+          <SearchInput
+            value={currentSearchTerm}
             onChange={handleSearchIputChange}
-            required
           />
         </form>
       </div>
@@ -94,23 +105,24 @@ const SearchResult = () => {
         </div>
       )}
 
-      {totalData > 0 && (
-        <div className='relative flex-10 basis-80 justify-start border-b-4 border-neutral-300 p-4 lg:max-w-201 lg:border-b-0'>
+      {totalData !== undefined && totalData > 0 && q && (
+        <div className={cn('relative mx-auto flex-1 basis-213 xl:pb-12')}>
           {!uiuxState.isAuthenticated && (
             <div className='absolute inset-0 top-0 left-0 z-5 bg-neutral-50 opacity-30' />
           )}
 
-          <h3 className='text-xl-bold md:display-sm-bold text-neutral-900'>
+          <h3 className='text-xl-bold md:display-sm-bold mt-3 text-neutral-900'>
             Result For "<span className='border-b-4 border-[#57edd7]'>{q}</span>
             "
           </h3>
-          {Posts.data.map((post: Post) => (
+          {post?.data.map((post: Post) => (
             <PostCard
               {...post}
               updatePostHandler={handleUpdatePost}
               key={post.id}
               isAlreadyLiked={likedPost.includes(post.id)}
               enabled={uiuxState.isAuthenticated}
+              isFetching={isFetching}
             />
           ))}
 
@@ -119,18 +131,18 @@ const SearchResult = () => {
               failed to fetch blog posts!
             </div>
           )}
-          {totalData > pageSize && (
+          {totalData !== undefined && totalData > pageSize && (
             <BlogPager
-              total={Posts?.total}
-              page={Posts?.page}
-              lastPage={Posts?.lastPage}
+              total={post?.total}
+              page={post?.page}
+              lastPage={post?.lastPage}
               onPageChange={handlePageChange}
             />
           )}
         </div>
       )}
 
-      {totalData === 0 && !isFetching && (
+      {totalData === 0 && q && !isFetching && (
         <div
           className='flex-center absolute inset-0 left-1/2 h-[calc(100vh-80px-48px)] w-full basis-80 -translate-x-[50%] flex-col'
           style={{

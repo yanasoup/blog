@@ -1,4 +1,3 @@
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Logo from '@/assets/icons/icon-logo.svg';
 import { NavLink } from 'react-router';
@@ -18,22 +17,28 @@ import {
 import type { RootState } from '@/redux/store';
 import UserProfileButton from './user-profile-button';
 import { useNavigate } from 'react-router';
-
+import { useDispatch } from 'react-redux';
+import { setSearchTerm } from '@/redux/ui-slice';
+import { SearchInput } from '../ui/search-input';
 const Navigation = () => {
   const uiuxState = useSelector((state: RootState) => state.uiux);
-  const [query, setQuery] = React.useState('');
   const fsearch = React.useRef<HTMLFormElement>(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const currentSearchTerm = useSelector(
+    (state: RootState) => state.uiux.currentSearchTerm
+  );
 
   function handleSearchIputChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setQuery(e.target.value);
+    // setQuery(e.target.value);
+    dispatch(setSearchTerm(e.target.value));
   }
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const q = query.trim();
+    const q = currentSearchTerm.trim();
     fsearch.current?.reset();
-    navigate(`/search?q=${encodeURIComponent(q)}`);
+    navigate(`/search/${encodeURIComponent(q)}`);
   }
 
   return (
@@ -47,12 +52,11 @@ const Navigation = () => {
         </div>
 
         <form onSubmit={handleSubmit}>
-          <Input
-            className='text-sm-regular hidden flex-2 md:max-w-93 md:min-w-80 lg:block'
-            placeholder='Search'
-            type='text'
+          <SearchInput
+            value={currentSearchTerm}
             onChange={handleSearchIputChange}
-            required
+            containerClassName='hidden lg:block'
+            inputClassName='text-sm-regular flex-2 md:max-w-93 md:min-w-80 '
           />
         </form>
         <nav>

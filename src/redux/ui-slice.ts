@@ -14,6 +14,7 @@ type UIUXState = {
   isAuthenticated: boolean;
   authUser: (AuthUser & { headline?: string }) | null;
   isLoggedOut: boolean;
+  currentSearchTerm: string;
 };
 
 const initialState: UIUXState = {
@@ -22,6 +23,7 @@ const initialState: UIUXState = {
   isAuthenticated: false,
   authUser: null,
   isLoggedOut: false,
+  currentSearchTerm: '',
 };
 
 const UIUXSlice = createSlice({
@@ -55,7 +57,9 @@ const UIUXSlice = createSlice({
         state.likedPosts = state.likedPosts.filter((id) => id !== postId);
       }
     },
-
+    setSearchTerm(state, action: PayloadAction<string>) {
+      state.currentSearchTerm = action.payload;
+    },
     resetState: () => {
       return initialState;
     },
@@ -69,5 +73,6 @@ export const {
   setUnauthenticated,
   addToLikedPost,
   resetState,
+  setSearchTerm,
 } = UIUXSlice.actions;
 export const uiUxReducer = UIUXSlice.reducer;

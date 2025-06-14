@@ -24,7 +24,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, Component: Home },
       { path: '/post/:postId', Component: PostDetailPage },
-      { path: '/search', Component: SearchResult },
+      { path: '/search/:searchTerm?', Component: SearchResult },
     ],
   },
   {
