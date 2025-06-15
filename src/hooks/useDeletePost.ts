@@ -2,7 +2,6 @@ import { customAxios } from '@/lib/customAxios';
 import { Post } from '@/models/post';
 import type { MutationFunction } from '@tanstack/query-core';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { GetPostsResponse } from '@/models/post';
 
 export type UseDeleteParams = {
   queryKey: [
