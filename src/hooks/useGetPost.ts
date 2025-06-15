@@ -233,8 +233,6 @@ export const getMyPosts: QueryFunction<
     },
   };
 
-  console.log('axiosRequestConfig', axiosRequestConfig);
-
   const response = await customAxios.get<GetPostsResponse>(
     '/posts/my-posts',
     axiosRequestConfig

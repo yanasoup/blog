@@ -50,7 +50,11 @@ export const MyProfilelPage: React.FC = () => {
     isPending: isDeleting,
     mutate: deletePostFn,
   } = useDeletePost({
-    queryKey: ['my-posts', currentPage],
+    queryKey: [
+      'my-posts',
+      { limit: pageSize, page: currentPage },
+      uiuxState?.apiToken!,
+    ],
   });
 
   const getPostsParams: UseGetPostsParams = [
@@ -153,7 +157,7 @@ export const MyProfilelPage: React.FC = () => {
   React.useEffect(() => {
     {
       deleteError &&
-        toast('Delete Failed', {
+        toast.error('Delete Failed', {
           description: `Error: ${deleteError}`,
           action: {
             label: 'Ok',

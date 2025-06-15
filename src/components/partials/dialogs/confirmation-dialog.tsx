@@ -47,33 +47,39 @@ const MyConfirmationDialog: React.FC<FormStatusDialogProps> = ({
               <XIcon size={24} className='cursor-pointer' />
             </DialogClose>
           </DialogTitle>
-          <DialogDescription className='hidden' />
+
           <div className='lg:text-md-regular text-sm-regular py-6 text-left text-neutral-600'>
             {description}
           </div>
 
-          <DialogDescription className='flex justify-end gap-1'>
+          <DialogDescription className='flex flex-col-reverse justify-end gap-1 md:flex-row'>
             <DialogClose asChild>
               <Button
                 disabled={showLoader}
                 variant='ghost'
-                className='text-xs-semibold lg:text-sm-semibold w-fit'
+                className='text-xs-semibold lg:text-sm-semibold w-full md:w-fit'
               >
                 Cancel
               </Button>
             </DialogClose>
-            <Button
-              disabled={showLoader}
-              onClick={() => onConfirm(postId)}
-              variant='destructive'
-              className='text-xs-semibold lg:text-sm-semibold text-neutral-25 w-fit'
-            >
-              {showLoader ? (
-                <BeatLoader color='#d5d7da' className='text-white' size={10} />
-              ) : (
-                'Delete'
-              )}
-            </Button>
+            <DialogClose asChild>
+              <Button
+                disabled={showLoader}
+                onClick={() => onConfirm(postId)}
+                variant='destructive'
+                className='text-xs-semibold lg:text-sm-semibold text-neutral-25 w-full md:w-fit'
+              >
+                {showLoader ? (
+                  <BeatLoader
+                    color='#d5d7da'
+                    className='text-white'
+                    size={10}
+                  />
+                ) : (
+                  'Delete'
+                )}
+              </Button>
+            </DialogClose>
           </DialogDescription>
         </DialogBody>
       </DialogContent>
