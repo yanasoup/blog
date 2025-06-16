@@ -120,8 +120,11 @@ const BlogPosts = () => {
           />
         )}
       </div>
-      <div className='w-[345px] shrink-0 flex-grow basis-86 p-4 text-neutral-800 md:p-0 lg:flex-grow-0 xl:border-l xl:border-neutral-300 xl:pl-12'>
-        <h3 className='display-xs-bold mb-5 text-neutral-900'>Most Liked</h3>
+      <div className='mt-5 h-1.5 w-full bg-neutral-300 xl:hidden' />
+      <div className='w-[345px] shrink-0 flex-grow basis-86 p-0 text-neutral-800 lg:flex-grow-0 xl:border-l xl:border-neutral-300 xl:pl-12'>
+        <h3 className='text-xl-bold xl:display-xs-bold mt-5 mb-4 text-neutral-900 xl:mt-0'>
+          Most Liked
+        </h3>
         {mostLikedPostsIsFetching && (
           <div className='flex-center mt-6 flex'>
             <BeatLoader color='#d5d7da' className='text-white' size={16} />
@@ -174,7 +177,7 @@ export const BlogPager: React.FC<BlogPagerProps> = ({
         <PaginationPrevious
           onClick={() => goToPage(currentPage - 1)}
           disabled={currentPage === 1}
-          className='lg:text-sm-regular text-xs-regular'
+          className='lg:text-regular text-regular text-xs lg:text-sm'
         />
       </PaginationItem>
     );
@@ -189,8 +192,10 @@ export const BlogPager: React.FC<BlogPagerProps> = ({
               onClick={() => goToPage(i)}
               isActive={i === currentPage}
               className={cn(
-                'lg:text-sm-regular text-xs-regular',
-                i === currentPage ? 'text-white' : 'text-neutral-900'
+                'lg:text-regular text-regular text-xs lg:text-sm',
+                i === currentPage
+                  ? 'p-1 px-0 py-0 text-white'
+                  : 'text-neutral-900'
               )}
             >
               {i}
@@ -203,7 +208,7 @@ export const BlogPager: React.FC<BlogPagerProps> = ({
       ) {
         pageButtons.push(
           <PaginationItem key={i}>
-            <PaginationEllipsis className='lg:text-sm-regular text-xs-regular' />
+            <PaginationEllipsis className='lg:text-regular text-regular text-xs lg:text-sm' />
           </PaginationItem>
         );
       }
