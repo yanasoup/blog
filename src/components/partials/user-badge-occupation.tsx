@@ -72,7 +72,7 @@ export const UserBadge: React.FC<UserBadgeProps> = ({
   const defaultIcon = IconUser;
 
   return (
-    <div className='relative'>
+    <div className='relative shrink-0'>
       {!isAvatarLoaded && (
         <div className='absolute inset-0 z-2 flex items-center justify-start'>
           <BeatLoader color='#d5d7da' size={size - 2} />

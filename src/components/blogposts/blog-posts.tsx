@@ -120,7 +120,7 @@ const BlogPosts = () => {
           />
         )}
       </div>
-      <div className='w-[345px] shrink-0 flex-grow basis-86 p-4 text-neutral-800 md:p-0 lg:flex-grow-0 lg:border-l lg:border-neutral-300 lg:pl-12'>
+      <div className='w-[345px] shrink-0 flex-grow basis-86 p-4 text-neutral-800 md:p-0 lg:flex-grow-0 xl:border-l xl:border-neutral-300 xl:pl-12'>
         <h3 className='display-xs-bold mb-5 text-neutral-900'>Most Liked</h3>
         {mostLikedPostsIsFetching && (
           <div className='flex-center mt-6 flex'>

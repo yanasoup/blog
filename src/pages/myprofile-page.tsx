@@ -199,6 +199,8 @@ export const MyProfilelPage: React.FC = () => {
             name={uiuxState.authUser?.name || 'Guest'}
             avatarUrl={uiuxState.authUser?.avatarUrl || ''}
             occupation={uiuxState.authUser?.headline || 'Frontend Developer'}
+            nameClassName='text-sm-bold md:text-lg-bold'
+            occupationClassName='text-xs-regular md:text-sm-regular'
             size={12.5}
           />
           <NavLink
@@ -217,13 +219,13 @@ export const MyProfilelPage: React.FC = () => {
               <TabsTrigger value='password'>Change Password</TabsTrigger>
             </TabsList>
             <TabsContent value='post' className='py-5'>
-              <div className='flex flex-col-reverse items-center justify-center border-b border-neutral-300 pb-5 md:flex-row md:justify-between'>
-                <span className='text-lg-bold md:display-xs-bold hidden md:block'>
+              <div className='flex flex-col-reverse items-center justify-center border-b border-neutral-300 pb-5 sm:flex-row sm:justify-between'>
+                <span className='text-lg-bold md:display-xs-bold hidden sm:block'>
                   ({posts.total}) Post
                 </span>
                 <NavLink
                   to='/write-post'
-                  className='bg-primary-300 text-xs-semibold lg:text-sm-semibold flex-center h-11 w-full gap-2 rounded-full px-11 py-3 md:w-fit'
+                  className='bg-primary-300 text-xs-semibold lg:text-sm-semibold flex-center h-11 w-full gap-2 rounded-full px-11 py-3 sm:w-fit'
                 >
                   <PenLineIcon className='size-6 text-white' />
                   <span className='text-xs-semibold md:text-sm-semibold w-fit text-white md:w-full'>
@@ -231,7 +233,7 @@ export const MyProfilelPage: React.FC = () => {
                   </span>
                 </NavLink>
               </div>
-              <span className='text-lg-bold md:display-xs-bold mt-4 block md:hidden'>
+              <span className='text-lg-bold md:display-xs-bold mt-4 block sm:hidden'>
                 ({posts.total}) Post
               </span>
               {isFetching && (
