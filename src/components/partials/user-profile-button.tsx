@@ -13,6 +13,7 @@ import { useDispatch } from 'react-redux';
 import { setUnauthenticated, resetState } from '@/redux/ui-slice';
 import { Icon } from '@iconify-icon/react';
 import { useMedia } from 'react-use';
+import { UserBadge } from './user-badge-occupation';
 
 const UserProfileButton = () => {
   const uiuxState = useSelector((state: RootState) => state.uiux);
@@ -38,13 +39,9 @@ const UserProfileButton = () => {
           onLogout={logoutHandler}
           children={
             <div className='flex-center flex cursor-pointer gap-2 lg:hidden'>
-              <img
-                className='size-10 rounded-full object-contain'
-                src={
-                  uiuxState.authUser?.avatarUrl
-                    ? uiuxState.authUser?.avatarUrl
-                    : 'https://placehold.co/40'
-                }
+              <UserBadge
+                avatarUrl={uiuxState.authUser?.avatarUrl || ''}
+                size={10}
               />
               <span className='text-xs-medium md:text-sm-medium text-neutral-900'>
                 {uiuxState.authUser?.name}
@@ -56,13 +53,9 @@ const UserProfileButton = () => {
         <UserDropdownMenu
           onLogout={logoutHandler}
           children={
-            <img
-              className='size-10 cursor-pointer rounded-full object-contain lg:hidden'
-              src={
-                uiuxState.authUser?.avatarUrl
-                  ? uiuxState.authUser?.avatarUrl
-                  : 'https://placehold.co/40'
-              }
+            <UserBadge
+              avatarUrl={uiuxState.authUser?.avatarUrl || ''}
+              size={10}
             />
           }
         />
