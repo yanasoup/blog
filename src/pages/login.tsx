@@ -70,7 +70,7 @@ const Login = () => {
     loginFn(data);
   };
   const getUsersHandler = async (email: string) => {
-    const response = await customAxios.get(`/users/${email}`);
+    const response = await customAxios.get(`/users/by-email/${email}`);
     return response.data;
   };
   const togglePasswordVisibility = () => {
