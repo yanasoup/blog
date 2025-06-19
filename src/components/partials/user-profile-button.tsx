@@ -53,9 +53,17 @@ const UserProfileButton = () => {
         <UserDropdownMenu
           onLogout={logoutHandler}
           children={
-            <UserBadge
-              avatarUrl={uiuxState.authUser?.avatarUrl || ''}
-              size={10}
+            // <UserBadge
+            //   avatarUrl={uiuxState.authUser?.avatarUrl || ''}
+            //   size={10}
+            // />
+            <img
+              className='size-10 cursor-pointer rounded-full object-contain lg:hidden'
+              src={
+                uiuxState.authUser?.avatarUrl
+                  ? uiuxState.authUser?.avatarUrl
+                  : 'https://placehold.co/40'
+              }
             />
           }
         />
